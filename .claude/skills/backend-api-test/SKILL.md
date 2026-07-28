@@ -140,7 +140,7 @@ def test_get_nonexistent_order(self, client):
 
 ### 4. データ構造の検証
 
-レスポンスの構造が API の契約どおりであることを確認します。
+レスポンスの構造が API の仕様どおりであることを確認します。
 
 ```python
 def test_order_items_structure(self, client):

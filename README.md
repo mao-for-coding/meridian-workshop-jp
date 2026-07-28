@@ -1,10 +1,10 @@
 # Meridian ワークショップ
 
-Claude Code のワークショップです。あなたはコンサルタントとして RFP に応札し、その後、受注した案件を実際に遂行します。
+Claude Code のワークショップです。コンサルタントになったつもりで RFP に応札し、受注した案件を納品まで仕上げるところまでを体験します。
 
 ## 事前準備
 
-以下をあらかじめインストールしてください。
+次のツールをあらかじめインストールしておいてください。
 
 - **Claude Code**:[docs.claude.com/claude-code](https://docs.claude.com/en/docs/claude-code/overview)
 - **Node.js 18 以上**:[nodejs.org](https://nodejs.org)
@@ -13,7 +13,7 @@ Claude Code のワークショップです。あなたはコンサルタント�
 
 ## セットアップ
 
-ワークショップの最後に PR を作成するため、**まずこのリポジトリを fork** し、その fork をクローンしてください。
+ワークショップの最後に PR を作成するので、**最初にこのリポジトリを fork** してから、自分の fork をクローンしてください。
 
 ```bash
 git clone https://github.com/<your-username>/meridian-workshop-jp.git
@@ -21,15 +21,15 @@ cd meridian-workshop-jp
 claude
 ```
 
-準備はこれだけです。あとは Claude に挨拶すれば、そこから先は Claude が案内してくれます。
+準備はこれで完了です。あとは Claude に一声かければ、続きは Claude が案内してくれます。
 
 ## 途中で接続が切れてしまったら
 
-このディレクトリでもう一度 `claude` を実行し、どこまで進んでいたかを Claude に伝えてください。
+同じディレクトリでもう一度 `claude` を実行し、どこまで進んでいたかを Claude に伝えてください。そこから再開できます。
 
 ## リポジトリの構成
 
 - `docs/rfp/`:RFP とクライアントの背景資料
 - `proposal/`:提案書の置き場所(最初は空です)
-- `client/`、`server/`:第2幕で扱うアプリケーション本体
+- `client/`、`server/`:第2幕で手を入れるアプリケーション本体
 - `.claude/`:前任ベンダーが残したプロジェクトレベルの Claude Code 設定(エージェント、コマンド、スキル)

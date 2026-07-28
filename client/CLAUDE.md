@@ -75,7 +75,7 @@ export default {
 
 **ref と computed の使い分け:**
 - 代入によって変化する値には `ref()` を使います
-- 他のリアクティブデータから導出される値には `computed()` を使います
+- 他のリアクティブデータをもとに算出される値には `computed()` を使います
 - computed プロパティは依存先が変化するまでキャッシュされます
 - computed プロパティを直接変更してはいけません
 
@@ -240,7 +240,7 @@ setup(props, { emit }) {
 
 ### チャート実装のベストプラクティス
 
-**computed プロパティを使います:**
+**computed プロパティを使う:**
 ```javascript
 const chartData = computed(() => {
   // Transform raw data for chart
@@ -273,7 +273,7 @@ const chartData = computed(() => {
 </style>
 ```
 
-**テーマには CSS 変数を使います:**
+**テーマには CSS 変数を使う:**
 ```css
 :root {
   --primary-color: #3b82f6;
@@ -286,9 +286,9 @@ const chartData = computed(() => {
 ```
 
 **レスポンシブデザイン:**
-- スケーラビリティのために rem/em 単位を使います
+- 単位は拡大縮小に強い rem/em を使います
 - モバイルファーストで設計します
-- レイアウトには CSS Grid を使います
+- レイアウトは CSS Grid で組みます
 - コンポーネントの配置には Flexbox を使います
 
 **class のバインディング:**
@@ -342,13 +342,13 @@ watchDebounced(
 - ✅ key には一意な ID を使う
 - ✅ 親のデータを更新するときは event を emit する
 - ✅ 外部データはすべて検証する
-- ✅ 導出データには computed プロパティを使う
+- ✅ 他の値から導かれるデータには computed プロパティを使う
 - ✅ ローディング状態とエラー状態を必ず表示する
 - ✅ プロジェクト全体で Composition API に統一する
 
 ### API 連携
 
-**API 呼び出しを一箇所に集約します:**
+**API 呼び出しは一箇所に集約する:**
 ```javascript
 // api.js
 import axios from 'axios'
