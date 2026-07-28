@@ -1,8 +1,8 @@
 # CLAUDE.md - Client
 
-This file provides guidance to Claude Code (claude.ai/code) when working with the Vue 3 frontend.
+このファイルは、Claude Code (claude.ai/code) が Vue 3 フロントエンドを扱う際のガイドラインです。
 
-## Running the Client
+## クライアントの起動
 
 ```bash
 # From client directory
@@ -10,11 +10,11 @@ npm run dev
 # Runs on http://localhost:3000
 ```
 
-## Development Best Practices
+## 開発のベストプラクティス
 
-### Vue 3 Composition API Patterns
+### Vue 3 Composition API のパターン
 
-**Component Structure:**
+**コンポーネントの構造:**
 ```vue
 <template>
   <!-- Template: Keep clean and declarative -->
@@ -64,22 +64,22 @@ export default {
 </style>
 ```
 
-**Why Composition API:**
-- Better code organization by feature
-- Easier to extract and reuse logic
-- TypeScript support
-- Smaller bundle size
-- More flexible than Options API
+**Composition API を使う理由:**
+- 機能単位でコードを整理しやすい
+- ロジックの切り出しと再利用が容易
+- TypeScript のサポート
+- バンドルサイズが小さい
+- Options API より柔軟性が高い
 
-### Reactive Data Best Practices
+### リアクティブデータのベストプラクティス
 
-**refs vs computed:**
-- Use `ref()` for values that change via assignment
-- Use `computed()` for values derived from other reactive data
-- computed properties are cached until dependencies change
-- Never mutate computed properties
+**ref と computed の使い分け:**
+- 代入によって変化する値には `ref()` を使います
+- 他のリアクティブデータから導出される値には `computed()` を使います
+- computed プロパティは依存先が変化するまでキャッシュされます
+- computed プロパティを直接変更してはいけません
 
-**Example:**
+**例:**
 ```javascript
 // refs - mutable state
 const searchQuery = ref('')
@@ -94,13 +94,13 @@ const filteredItems = computed(() => {
 })
 ```
 
-**Accessing ref values:**
-- In `<script>`: Use `.value` (e.g., `count.value++`)
-- In `<template>`: No `.value` needed (automatic unwrapping)
+**ref の値へのアクセス:**
+- `<script>` 内では `.value` を使います(例: `count.value++`)
+- `<template>` 内では `.value` は不要です(自動的にアンラップされます)
 
-### Data Loading Pattern
+### データ読み込みのパターン
 
-**Standard Approach:**
+**標準的なアプローチ:**
 ```javascript
 const loading = ref(true)
 const error = ref(null)
@@ -120,7 +120,7 @@ const loadData = async () => {
 }
 ```
 
-**Display states in template:**
+**template での状態表示:**
 ```vue
 <div v-if="loading">Loading...</div>
 <div v-else-if="error">{{ error }}</div>
@@ -129,15 +129,15 @@ const loadData = async () => {
 </div>
 ```
 
-### Filter Management with Composables
+### composable によるフィルタ管理
 
-**Pattern:**
-1. Create composable for shared state
-2. Export refs for UI binding
-3. Provide helper functions
-4. Watch for changes to trigger effects
+**パターン:**
+1. 共有状態のための composable を作る
+2. UI にバインドするための ref を export する
+3. ヘルパー関数を提供する
+4. 変更を watch して副作用を発火させる
 
-**Example composable:**
+**composable の例:**
 ```javascript
 // composables/useFilters.js
 import { ref, computed } from 'vue'
@@ -173,9 +173,9 @@ export function useFilters() {
 }
 ```
 
-### Reactivity Best Practices
+### リアクティビティのベストプラクティス
 
-**v-for keys:**
+**v-for の key:**
 ```vue
 <!-- ❌ Bad - using index -->
 <div v-for="(item, index) in items" :key="index">
@@ -184,9 +184,9 @@ export function useFilters() {
 <div v-for="item in items" :key="item.id">
 ```
 
-**Why:** Using index as key causes Vue to reuse DOM elements incorrectly when list changes.
+**理由:** index を key に使うと、リストの変更時に Vue が DOM 要素を誤って再利用してしまいます。
 
-**Prop mutation:**
+**props の変更:**
 ```javascript
 // ❌ Bad - mutating props
 props.user.name = 'New Name'
@@ -195,7 +195,7 @@ props.user.name = 'New Name'
 emit('update:user', { ...props.user, name: 'New Name' })
 ```
 
-**Date handling:**
+**日付の扱い:**
 ```javascript
 // ❌ Bad - no validation
 const month = new Date(order.date).getMonth()
@@ -207,9 +207,9 @@ if (!isNaN(date.getTime())) {
 }
 ```
 
-### Component Communication
+### コンポーネント間の通信
 
-**Props Down, Events Up:**
+**Props は下へ、Events は上へ:**
 ```javascript
 // Parent component
 <ChildComponent
@@ -231,16 +231,16 @@ setup(props, { emit }) {
 }
 ```
 
-**When to use composables:**
-- State shared across multiple components
-- Logic used in multiple places
-- Authentication state
-- Global filters
-- Theme/settings
+**composable を使うべき場面:**
+- 複数のコンポーネントで共有する状態
+- 複数の場所で使うロジック
+- 認証状態
+- グローバルなフィルタ
+- テーマや設定
 
-### Chart Implementation Best Practices
+### チャート実装のベストプラクティス
 
-**Use computed properties:**
+**computed プロパティを使います:**
 ```javascript
 const chartData = computed(() => {
   // Transform raw data for chart
@@ -251,21 +251,21 @@ const chartData = computed(() => {
 })
 ```
 
-**SVG charts:**
-- Define viewBox for responsive scaling
-- Use percentages for positioning when possible
-- Handle empty data gracefully
-- Add ARIA labels for accessibility
+**SVG チャート:**
+- レスポンシブなスケーリングのために viewBox を定義します
+- 位置指定にはできるだけパーセンテージを使います
+- データが空の場合も適切に処理します
+- アクセシビリティのために ARIA ラベルを付けます
 
-**Performance:**
-- Keep chart calculations in computed properties
-- Avoid recalculating on every render
-- Use v-show instead of v-if for frequently toggled charts
-- Debounce resize handlers
+**パフォーマンス:**
+- チャートの計算は computed プロパティにまとめます
+- レンダリングのたびに再計算しないようにします
+- 表示・非表示を頻繁に切り替えるチャートには v-if ではなく v-show を使います
+- resize ハンドラは debounce します
 
-### Styling Best Practices
+### スタイリングのベストプラクティス
 
-**Scoped styles:**
+**scoped スタイル:**
 ```vue
 <style scoped>
 /* Only affects this component */
@@ -273,7 +273,7 @@ const chartData = computed(() => {
 </style>
 ```
 
-**Use CSS variables for themes:**
+**テーマには CSS 変数を使います:**
 ```css
 :root {
   --primary-color: #3b82f6;
@@ -285,29 +285,29 @@ const chartData = computed(() => {
 }
 ```
 
-**Responsive design:**
-- Use rem/em units for scalability
-- Mobile-first approach
-- CSS Grid for layouts
-- Flexbox for component arrangement
+**レスポンシブデザイン:**
+- スケーラビリティのために rem/em 単位を使います
+- モバイルファーストで設計します
+- レイアウトには CSS Grid を使います
+- コンポーネントの配置には Flexbox を使います
 
-**Class binding:**
+**class のバインディング:**
 ```vue
 <div :class="['card', { 'card-active': isActive }]">
 <div :class="{ danger: hasError, success: isComplete }">
 ```
 
-### Performance Considerations
+### パフォーマンスに関する考慮事項
 
-**Computed vs Methods:**
-- Computed: Cached until dependencies change (use for calculations)
-- Methods: Run every time accessed (use for actions)
+**computed と methods の使い分け:**
+- computed: 依存先が変化するまでキャッシュされます(計算に使う)
+- methods: アクセスのたびに実行されます(アクションに使う)
 
-**v-show vs v-if:**
-- v-show: Toggles CSS display (better for frequent toggles)
-- v-if: Adds/removes from DOM (better for rarely shown content)
+**v-show と v-if の使い分け:**
+- v-show: CSS の display を切り替えます(頻繁な切り替えに向く)
+- v-if: DOM への追加・削除を行います(めったに表示しないコンテンツに向く)
 
-**Lazy loading:**
+**遅延読み込み:**
 ```javascript
 // Dynamic import for code splitting
 const HeavyComponent = defineAsyncComponent(() =>
@@ -315,7 +315,7 @@ const HeavyComponent = defineAsyncComponent(() =>
 )
 ```
 
-**Watch with debounce:**
+**debounce 付きの watch:**
 ```javascript
 import { watchDebounced } from '@vueuse/core'
 
@@ -328,27 +328,27 @@ watchDebounced(
 )
 ```
 
-### Common Pitfalls
+### よくある落とし穴
 
-**Avoid:**
-- ❌ Using array index as v-for key
-- ❌ Mutating props directly
-- ❌ Forgetting to validate dates before parsing
-- ❌ Heavy computations in methods instead of computed
-- ❌ Not handling loading/error states
-- ❌ Mixing Composition API and Options API in same component
+**避けるべきこと:**
+- ❌ 配列の index を v-for の key に使う
+- ❌ props を直接変更する
+- ❌ 日付をパースする前の検証を忘れる
+- ❌ 重い計算を computed ではなく methods で行う
+- ❌ ローディング状態やエラー状態を処理しない
+- ❌ 同じコンポーネント内で Composition API と Options API を混在させる
 
-**Do:**
-- ✅ Use unique IDs for keys
-- ✅ Emit events to update parent data
-- ✅ Validate all external data
-- ✅ Use computed properties for derived data
-- ✅ Always show loading and error states
-- ✅ Stick to Composition API throughout project
+**推奨すること:**
+- ✅ key には一意な ID を使う
+- ✅ 親のデータを更新するときは event を emit する
+- ✅ 外部データはすべて検証する
+- ✅ 導出データには computed プロパティを使う
+- ✅ ローディング状態とエラー状態を必ず表示する
+- ✅ プロジェクト全体で Composition API に統一する
 
-### API Integration
+### API 連携
 
-**Centralize API calls:**
+**API 呼び出しを一箇所に集約します:**
 ```javascript
 // api.js
 import axios from 'axios'
@@ -367,7 +367,7 @@ export const api = {
 }
 ```
 
-**Use in component:**
+**コンポーネントでの利用:**
 ```javascript
 import { api } from '@/api'
 
@@ -377,9 +377,9 @@ const loadItems = async () => {
 }
 ```
 
-### Number Formatting
+### 数値のフォーマット
 
-**Currency:**
+**通貨:**
 ```javascript
 const formatted = value.toLocaleString('en-US', {
   style: 'currency',
@@ -388,28 +388,28 @@ const formatted = value.toLocaleString('en-US', {
 // Output: $1,234.56
 ```
 
-**Large numbers:**
+**大きな数値:**
 ```javascript
 const formatted = value.toLocaleString()
 // Output: 1,234,567
 ```
 
-**Percentages:**
+**パーセンテージ:**
 ```javascript
 const formatted = (value * 100).toFixed(1) + '%'
 // Output: 45.2%
 ```
 
-### Testing Components
+### コンポーネントのテスト
 
-**What to test:**
-- Component renders correctly
-- Props are handled properly
-- Events are emitted correctly
-- Computed properties calculate correctly
-- User interactions work as expected
+**テストすべき項目:**
+- コンポーネントが正しくレンダリングされること
+- props が適切に処理されること
+- event が正しく emit されること
+- computed プロパティが正しく計算されること
+- ユーザー操作が期待どおりに動作すること
 
-**Example:**
+**例:**
 ```javascript
 import { mount } from '@vue/test-utils'
 import MyComponent from './MyComponent.vue'
@@ -424,15 +424,15 @@ describe('MyComponent', () => {
 })
 ```
 
-### Debugging
+### デバッグ
 
 **Vue DevTools:**
-- Install Vue DevTools browser extension
-- Inspect component hierarchy
-- View reactive state in real-time
-- Track events and performance
+- ブラウザ拡張の Vue DevTools をインストールします
+- コンポーネント階層を調べられます
+- リアクティブな状態をリアルタイムに確認できます
+- event やパフォーマンスを追跡できます
 
-**Console logging:**
+**console でのログ出力:**
 ```javascript
 // In setup()
 console.log('Data:', data.value)
@@ -443,27 +443,27 @@ watch(data, (newVal) => {
 })
 ```
 
-**Common issues:**
-- Reactivity not working → Forgot `.value` in script
-- Computed not updating → Dependency not reactive
-- Props not reactive → Destructured props in setup
-- v-for not updating → Using wrong key
+**よくある問題:**
+- リアクティビティが効かない → script 内で `.value` を付け忘れている
+- computed が更新されない → 依存先がリアクティブでない
+- props がリアクティブでない → setup 内で props を分割代入している
+- v-for が更新されない → key の指定が誤っている
 
-### Code Organization
+### コードの整理
 
-**When to extract component:**
-- Template is >100 lines
-- Logic is >150 lines
-- Component is reused in multiple places
-- Component has distinct responsibility
+**コンポーネントを切り出す目安:**
+- template が 100 行を超える
+- ロジックが 150 行を超える
+- 複数の場所で再利用されている
+- 明確に独立した責務を持っている
 
-**When to create composable:**
-- State shared across components
-- Reusable logic pattern
-- Complex logic that can be isolated
-- API interaction patterns
+**composable を作る目安:**
+- 複数のコンポーネントで共有する状態がある
+- 再利用できるロジックのパターンがある
+- 切り離せる複雑なロジックがある
+- API とのやり取りのパターンがある
 
-**File structure:**
+**ファイル構成:**
 ```
 src/
 ├── views/           # Page-level components
@@ -473,12 +473,12 @@ src/
 └── main.js         # App entry
 ```
 
-## Quick Reference
+## クイックリファレンス
 
-**Start dev server:** `npm run dev`
-**Build for production:** `npm run build`
-**Component structure:** Template → Script (Composition API) → Scoped Styles
-**Data loading:** loading state → try/catch → finally
-**Filters:** Composable → refs → watch for changes
-**Keys:** Always use unique IDs, never array index
-**API calls:** Centralize in api.js, wrap in try/catch
+**開発サーバー起動:** `npm run dev`
+**本番用ビルド:** `npm run build`
+**コンポーネント構造:** Template → Script (Composition API) → Scoped Styles
+**データ読み込み:** loading 状態 → try/catch → finally
+**フィルタ:** composable → ref → 変更を watch
+**key:** 必ず一意な ID を使い、配列の index は使わない
+**API 呼び出し:** api.js に集約し、try/catch で包む

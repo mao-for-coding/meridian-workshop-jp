@@ -1,16 +1,16 @@
-# Handoff Notes — Inventory Dashboard
+# 引き継ぎメモ:在庫ダッシュボード
 
-*Prepared by previous vendor at contract end, Nov 2024. Provided by Meridian as part of the RFP package.*
+*前任ベンダーが契約終了時(2024年11月)に作成。RFP パッケージの一部として Meridian より提供。*
 
 ---
 
-## Stack
+## 技術スタック
 
-- Frontend: Vue 3 + Composition API + Vite (port 3000)
-- Backend: Python FastAPI (port 8001)
-- Data: JSON files in `server/data/` loaded via `server/mock_data.py` (no database)
+- フロントエンド:Vue 3 + Composition API + Vite(ポート 3000)
+- バックエンド:Python FastAPI(ポート 8001)
+- データ:`server/data/` 内の JSON ファイルを `server/mock_data.py` 経由で読み込み(データベースなし)
 
-## Running it
+## 起動方法
 
 ```bash
 # Backend
@@ -20,37 +20,37 @@ cd server && uv run python main.py
 cd client && npm install && npm run dev
 ```
 
-There is also a `scripts/start.sh` that runs both.
+両方をまとめて起動する `scripts/start.sh` もあります。
 
 ## API
 
-- `GET /api/inventory` — filters: warehouse, category
-- `GET /api/orders` — filters: warehouse, category, status, month
-- `GET /api/dashboard/summary` — all filters
-- `GET /api/demand`, `/api/backlog` — no filters
-- `GET /api/spending/*` — summary, monthly, categories, transactions
+- `GET /api/inventory`(フィルター:warehouse、category)
+- `GET /api/orders`(フィルター:warehouse、category、status、month)
+- `GET /api/dashboard/summary`(全フィルター対応)
+- `GET /api/demand`、`/api/backlog`(フィルターなし)
+- `GET /api/spending/*`(summary、monthly、categories、transactions)
 
-## Patterns
+## 実装パターン
 
-- Filter system: 4 filters (Time Period, Warehouse, Category, Order Status) apply via query params
-- Data flow: Vue filters → `client/src/api.js` → FastAPI → in-memory filtering → Pydantic → computed properties
-- Reactivity: raw data in refs, derived data in computed
+- フィルターシステム:4種のフィルター(期間、倉庫、カテゴリー、注文ステータス)をクエリパラメータで適用
+- データフロー:Vue のフィルター → `client/src/api.js` → FastAPI → インメモリでのフィルタリング → Pydantic → computed プロパティ
+- リアクティビティ:生データは ref に、派生データは computed に保持
 
-## Known issues at handoff
+## 引き継ぎ時点の既知の問題
 
-- Reports module was in progress; not all filters wired up
-- No automated tests were delivered
-- Some views still use older patterns (Options API) — migration incomplete
+- Reports モジュールは開発途中。フィルターの一部が未接続
+- 自動テストは未納品
+- 一部のビューは旧パターン(Options API)のまま。移行は未完了
 
-## Design tokens
+## デザイントークン
 
-- Colors: slate/gray (#0f172a, #64748b, #e2e8f0)
-- Status colors: green/blue/yellow/red
-- Charts: custom SVG, CSS Grid layouts
+- カラー:スレート/グレー系(#0f172a、#64748b、#e2e8f0)
+- ステータスカラー:緑/青/黄/赤
+- チャート:自作 SVG、レイアウトは CSS Grid
 
-## File map
+## ファイルマップ
 
-- Views: `client/src/views/*.vue`
-- API client: `client/src/api.js`
-- Backend: `server/main.py`, `server/mock_data.py`
-- Data: `server/data/*.json`
+- ビュー:`client/src/views/*.vue`
+- API クライアント:`client/src/api.js`
+- バックエンド:`server/main.py`、`server/mock_data.py`
+- データ:`server/data/*.json`

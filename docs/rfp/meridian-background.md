@@ -1,18 +1,18 @@
-# Client Background — Meridian Components
+# クライアント背景資料:Meridian Components
 
-*Internal research notes. Compiled from public sources and intake call.*
+*社内リサーチノート。公開情報およびインテークコールの内容をもとに作成。*
 
 ---
 
-**Company.** Meridian Components, Inc. is a privately held distributor of industrial automation parts — sensors, actuators, controllers, circuit boards, power supplies. Founded 2009, headquartered in San Francisco. ~180 employees. Revenue approx. $9.6M (FY25).
+**会社概要。** Meridian Components, Inc. は、産業用オートメーション部品(センサー、アクチュエーター、コントローラー、回路基板、電源装置)を扱う非上場のディストリビューター。2009年創業、本社はサンフランシスコ。従業員は約180名。売上高は約960万ドル(2025年度)。
 
-**Operations.** Three warehouses: San Francisco (HQ and primary distribution), London (EMEA), and Tokyo (opened 2023 to serve APAC OEM customers). Tokyo team is ~12 people; English proficiency varies, which is the driver behind the i18n ask.
+**オペレーション。** 倉庫は3拠点:サンフランシスコ(本社兼メイン配送拠点)、ロンドン(EMEA)、東京(APAC の OEM 顧客向けに2023年開設)。東京チームは12名ほどで、英語力にはばらつきがある。これが i18n 要望の背景となっている。
 
-**Buying committee.**
-- **J. Okafor** (Director of Procurement) — issued the RFP, owns vendor selection process. Cares about timeline and price predictability.
-- **R. Tanaka** (VP Operations) — the actual user. Her team lives in the dashboard daily. The Restocking feature is her ask. Frustrated with the previous vendor.
-- **IT (unnamed)** — has blocked changes to the current system because there's no test coverage. R3 is effectively their requirement to unblock everything else.
+**購買委員会。**
+- **J. Okafor 氏(調達部長)**:RFP の発行者で、ベンダー選定プロセスのオーナー。スケジュールと価格の予見可能性を重視する。
+- **R. Tanaka 氏(オペレーション担当 VP)**:実際のユーザー。彼女のチームは日々このダッシュボードを使って業務を回している。発注推奨機能は彼女からの要望。前任ベンダーには不満を抱いている。
+- **IT 部門(担当者名は不明)**:テストが整備されていないことを理由に、現行システムへの変更を止めてきた。R3 は事実上、他のすべてを前に進めるための IT 部門の要求と言える。
 
-**Previous vendor.** Contract ended Nov 2024 by mutual non-renewal. Meridian's read: capable but over-committed, left work unfinished. Handoff documentation was minimal (see `vendor-handoff.md`).
+**前任ベンダー。** 2024年11月、双方合意のうえ契約を更新せず終了。Meridian 側の見立てでは、能力はあったが案件を抱え込みすぎ、仕事を未完のまま残していった。引き継ぎドキュメントも最小限だった(`vendor-handoff.md` 参照)。
 
-**Why this matters for the proposal.** Tanaka is the champion; the proposal should speak to operations pain, not just technical scope. IT is a gatekeeper; R3 (testing) is probably non-negotiable even though it's listed as one of four required items. Okafor will score on the published criteria but timeline confidence likely matters more than lowest price.
+**提案書への示唆。** Tanaka 氏がチャンピオンであり、提案書は技術的なスコープだけでなくオペレーション上の課題に響く内容にすべきである。IT 部門はゲートキーパーであり、R3(テスト)は必須4項目のひとつという位置付け以上に、実質的には譲れない条件と見てよい。Okafor 氏は公表された評価基準に沿って採点するだろうが、最安値よりもスケジュールの確度のほうが効く可能性が高い。

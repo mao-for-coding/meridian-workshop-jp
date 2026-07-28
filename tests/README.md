@@ -1,8 +1,8 @@
-# API Tests
+# API テスト
 
-Comprehensive test suite for the Factory Inventory Management System backend APIs.
+工場在庫管理システムのバックエンド API を対象とした包括的なテストスイートです。
 
-## Test Structure
+## テストの構成
 
 ```
 tests/
@@ -16,122 +16,122 @@ tests/
 └── README.md           # This file
 ```
 
-## Running Tests
+## テストの実行方法
 
-### Run all tests
+### すべてのテストを実行する
 ```bash
 cd tests
 uv run pytest -v
 ```
 
-### Run specific test file
+### 特定のテストファイルを実行する
 ```bash
 cd tests
 uv run pytest backend/test_inventory.py -v
 ```
 
-### Run specific test class
+### 特定のテストクラスを実行する
 ```bash
 cd tests
 uv run pytest backend/test_inventory.py::TestInventoryEndpoints -v
 ```
 
-### Run specific test
+### 特定のテストだけを実行する
 ```bash
 cd tests
 uv run pytest backend/test_inventory.py::TestInventoryEndpoints::test_get_all_inventory -v
 ```
 
-### Run with coverage (requires pytest-cov)
+### カバレッジ付きで実行する(pytest-cov が必要)
 ```bash
 cd tests
 uv run pytest --cov=../server --cov-report=html
 ```
 
-## Test Coverage
+## テストカバレッジ
 
-**Total: 51 tests** covering all API endpoints:
+**合計 51 テスト**で、すべての API endpoint をカバーしています。
 
-### Inventory Endpoints (10 tests)
-- ✓ Get all inventory items
-- ✓ Filter by warehouse
-- ✓ Filter by category (including Power Supplies)
-- ✓ Filter by multiple criteria
-- ✓ Get specific item by ID
-- ✓ Handle non-existent items (404)
-- ✓ Validate field structure
-- ✓ Validate data types
+### 在庫関連の endpoint(10 テスト)
+- ✓ 全在庫アイテムの取得
+- ✓ 倉庫によるフィルタリング
+- ✓ カテゴリによるフィルタリング(Power Supplies を含む)
+- ✓ 複数条件でのフィルタリング
+- ✓ ID を指定した特定アイテムの取得
+- ✓ 存在しないアイテムの処理(404)
+- ✓ フィールド構造の検証
+- ✓ データ型の検証
 
-### Orders Endpoints (15 tests)
-- ✓ Get all orders
-- ✓ Filter by warehouse, category, status
-- ✓ Filter by month and quarter
-- ✓ Multiple filter combinations
-- ✓ Get specific order by ID
-- ✓ Handle non-existent orders (404)
-- ✓ Validate order items structure
-- ✓ Validate status values
-- ✓ Validate date formats
-- ✓ Validate total value calculations
+### 注文関連の endpoint(15 テスト)
+- ✓ 全注文の取得
+- ✓ 倉庫、カテゴリ、ステータスによるフィルタリング
+- ✓ 月および四半期によるフィルタリング
+- ✓ 複数フィルターの組み合わせ
+- ✓ ID を指定した特定注文の取得
+- ✓ 存在しない注文の処理(404)
+- ✓ 注文アイテムの構造検証
+- ✓ ステータス値の検証
+- ✓ 日付フォーマットの検証
+- ✓ 合計金額の計算検証
 
-### Dashboard Endpoints (13 tests)
-- ✓ Get dashboard summary
-- ✓ Validate data types and non-negative values
-- ✓ Filter by warehouse, category, status, month
-- ✓ Multiple filter combinations
-- ✓ Validate calculation accuracy:
-  - Pending orders calculation
-  - Low stock items calculation
-  - Total inventory value calculation
+### ダッシュボード関連の endpoint(13 テスト)
+- ✓ ダッシュボードサマリーの取得
+- ✓ データ型と非負値の検証
+- ✓ 倉庫、カテゴリ、ステータス、月によるフィルタリング
+- ✓ 複数フィルターの組み合わせ
+- ✓ 計算精度の検証:
+  - 保留中注文数の計算
+  - 在庫僅少アイテム数の計算
+  - 在庫総額の計算
 
-### Miscellaneous Endpoints (13 tests)
-- **Demand Forecasts (3 tests)**
-  - ✓ Get demand forecasts
-  - ✓ Validate trend values
-  - ✓ Validate non-negative values
+### その他の endpoint(13 テスト)
+- **需要予測(3 テスト)**
+  - ✓ 需要予測の取得
+  - ✓ トレンド値の検証
+  - ✓ 非負値の検証
 
-- **Backlog Items (4 tests)**
-  - ✓ Get backlog items
-  - ✓ Validate priority values
-  - ✓ Validate quantity logic
-  - ✓ Validate days delayed
+- **バックログアイテム(4 テスト)**
+  - ✓ バックログアイテムの取得
+  - ✓ 優先度の値の検証
+  - ✓ 数量ロジックの検証
+  - ✓ 遅延日数の検証
 
-- **Spending Data (4 tests)**
-  - ✓ Get spending summary
-  - ✓ Get monthly spending
-  - ✓ Get category spending
-  - ✓ Get recent transactions
+- **支出データ(4 テスト)**
+  - ✓ 支出サマリーの取得
+  - ✓ 月次支出の取得
+  - ✓ カテゴリ別支出の取得
+  - ✓ 直近の取引履歴の取得
 
-- **Root Endpoint (2 tests)**
-  - ✓ API info endpoint
-  - ✓ Validate response structure
+- **ルート endpoint(2 テスト)**
+  - ✓ API 情報 endpoint
+  - ✓ レスポンス構造の検証
 
-## Test Features
+## テストの特徴
 
-- **FastAPI TestClient**: Uses FastAPI's built-in test client for fast, isolated testing
-- **Fixtures**: Reusable test fixtures in `conftest.py`
-- **Comprehensive Validation**: Tests data structure, types, calculations, and business logic
-- **Filter Testing**: Validates all filter combinations and edge cases
-- **Error Handling**: Tests 404 responses and edge cases
-- **New Features**: Includes tests for Power Supplies category
+- **FastAPI TestClient**: FastAPI 組み込みのテストクライアントを使い、高速かつ独立したテストを実現しています
+- **Fixture**: 再利用可能な fixture を `conftest.py` にまとめています
+- **包括的な検証**: データ構造、型、計算結果、ビジネスロジックまで確認します
+- **フィルターのテスト**: すべてのフィルターの組み合わせとエッジケースを検証します
+- **エラーハンドリング**: 404 レスポンスやエッジケースもテストします
+- **新機能への対応**: Power Supplies カテゴリのテストも含まれています
 
-## Dependencies
+## 依存パッケージ
 
-Tests require the following packages (automatically installed with `uv sync`):
+テストの実行には以下のパッケージが必要です(`uv sync` で自動的にインストールされます)。
 - pytest >= 8.0.0
 - pytest-asyncio >= 0.23.0
 - httpx >= 0.27.0
-- pytest-cov >= 4.1.0 (optional, for coverage reports)
+- pytest-cov >= 4.1.0(任意。カバレッジレポート用)
 
-## Adding New Tests
+## 新しいテストの追加
 
-1. Create test file in `tests/backend/` following naming convention `test_*.py`
-2. Import `client` fixture from conftest.py
-3. Create test class (optional but recommended for organization)
-4. Write test functions starting with `test_`
-5. Run tests to verify
+1. `tests/backend/` に `test_*.py` という命名規則でテストファイルを作成します
+2. conftest.py の `client` fixture を利用します
+3. テストクラスを作成します(必須ではありませんが、整理のため推奨します)
+4. `test_` で始まるテスト関数を書きます
+5. テストを実行して動作を確認します
 
-Example:
+例:
 ```python
 class TestNewEndpoint:
     def test_new_feature(self, client):
@@ -141,9 +141,9 @@ class TestNewEndpoint:
         assert "expected_field" in data
 ```
 
-## CI/CD Integration
+## CI/CD との連携
 
-To integrate with CI/CD pipelines:
+CI/CD パイプラインに組み込む場合の例です。
 
 ```yaml
 # Example GitHub Actions
@@ -153,9 +153,9 @@ To integrate with CI/CD pipelines:
     uv run pytest -v --tb=short
 ```
 
-## Notes
+## 補足
 
-- All tests use in-memory mock data (no database required)
-- Tests are independent and can run in any order
-- FastAPI TestClient handles app lifecycle automatically
-- Tests run in ~0.13 seconds
+- すべてのテストはインメモリの mock データを使用します(データベースは不要です)
+- 各テストは独立しており、任意の順序で実行できます
+- アプリのライフサイクルは FastAPI TestClient が自動的に管理します
+- テストは約 0.13 秒で完了します

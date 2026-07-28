@@ -1,8 +1,8 @@
 ---
-description: Stop the frontend and backend servers
+description: フロントエンドとバックエンドのサーバーを停止します
 ---
 
-Find and stop any processes running on ports 3000 (frontend) and 8001 (backend).
+ポート 3000(フロントエンド)と 8001(バックエンド)で動いているプロセスを見つけて停止してください。
 
 - macOS/Linux: `lsof -ti:3000,8001 | xargs kill 2>/dev/null || true`
-- Windows: Use `netstat -aon | findstr :PORT` to find PIDs, then `taskkill /F /PID <pid>`
+- Windows: `netstat -aon | findstr :PORT` で PID を調べてから `taskkill /F /PID <pid>`

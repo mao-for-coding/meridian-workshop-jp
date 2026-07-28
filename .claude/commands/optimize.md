@@ -1,36 +1,36 @@
-# Optimize Codebase
+# コードベースの最適化
 
-Perform a comprehensive codebase optimization:
+コードベース全体を対象に、次の最適化を実施してください:
 
-1. **Scan the entire codebase** to identify:
-   - Unused functions, variables, and imports
-   - Dead code and unreachable code paths
-   - Unused dependencies in package.json and pyproject.toml
-   - Duplicate code that can be refactored
-   - Unused CSS classes and styles
+1. **コードベース全体をスキャン**して、以下を洗い出す:
+   - 未使用の関数、変数、import
+   - デッドコードや到達不能なコードパス
+   - package.json や pyproject.toml 内の未使用の依存関係
+   - リファクタリングでまとめられる重複コード
+   - 未使用の CSS クラスやスタイル
 
-2. **Analyze code quality**:
-   - Look for performance bottlenecks
-   - Identify inefficient patterns (e.g., unnecessary re-renders, inefficient loops)
-   - Check for missing error handling
-   - Find hardcoded values that should be constants
+2. **コード品質を分析する**:
+   - パフォーマンスのボトルネックを探す
+   - 非効率なパターン(不要な再レンダリング、非効率なループなど)を特定する
+   - エラーハンドリングの漏れを確認する
+   - 定数にすべきハードコードされた値を見つける
 
-3. **Remove unused code**:
-   - Delete unused imports and functions
-   - Remove commented-out code
-   - Clean up unused dependencies
-   - Remove unused CSS/styles
+3. **未使用コードを削除する**:
+   - 未使用の import や関数を削除する
+   - コメントアウトされたコードを取り除く
+   - 未使用の依存関係を整理する
+   - 未使用の CSS やスタイルを削除する
 
-4. **Optimize existing code**:
-   - Simplify complex logic
-   - Extract repeated code into reusable functions
-   - Optimize database queries or API calls
-   - Improve algorithm efficiency where applicable
+4. **既存コードを最適化する**:
+   - 複雑なロジックを簡素化する
+   - 繰り返しのコードを再利用可能な関数に抽出する
+   - データベースクエリや API 呼び出しを最適化する
+   - 可能な箇所でアルゴリズムの効率を改善する
 
-5. **Provide a summary** of:
-   - What was removed (with file locations)
-   - What was optimized (with before/after explanations)
-   - Recommendations for further improvements
-   - Any breaking changes or things to test
+5. **サマリーを報告する**:
+   - 削除した内容(ファイルの場所つき)
+   - 最適化した内容(変更前後の説明つき)
+   - さらなる改善に向けた提案
+   - 破壊的変更やテストしておくべき点
 
-Focus on both frontend (Vue/JavaScript) and backend (Python/FastAPI) code. Be thorough but conservative - only remove code you're confident is unused.
+フロントエンド(Vue/JavaScript)とバックエンド(Python/FastAPI)の両方を対象にしてください。徹底的に、ただし慎重に。未使用だと確信できるコードだけを削除してください。

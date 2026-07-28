@@ -1,24 +1,24 @@
 ---
-description: Run frontend and backend tests with comprehensive reporting
+description: フロントエンドとバックエンドのテストを実行し、詳細なレポートを作成します
 ---
 
-Run the complete test suite for this application:
+このアプリケーションのテストスイート一式を実行してください:
 
-1. **Frontend Tests**: Run any frontend tests (if they exist in client/)
-2. **Backend Tests**: Run Python tests using pytest (if they exist in server/)
-3. **Linting**: Check code quality for both frontend and backend
-4. **Type Checking**: Verify TypeScript/JavaScript types (if configured)
+1. **フロントエンドテスト**: フロントエンドのテストを実行する(client/ に存在する場合)
+2. **バックエンドテスト**: pytest で Python のテストを実行する(server/ に存在する場合)
+3. **リント**: フロントエンドとバックエンドの両方でコード品質をチェックする
+4. **型チェック**: TypeScript/JavaScript の型を検証する(設定されている場合)
 
-Please execute the tests and provide a comprehensive report including:
-- Total tests run and results (pass/fail)
-- Any errors or warnings found
-- Code coverage metrics (if available)
-- Linting issues that need to be addressed
-- Suggestions for fixing any failures
+テストを実行したうえで、次の内容を含む詳細なレポートを提供してください:
+- 実行したテスト数と結果(成功/失敗)
+- 見つかったエラーや警告
+- コードカバレッジの指標(取得できる場合)
+- 対応が必要なリントの問題
+- 失敗しているテストの修正案
 
-If tests don't exist yet, offer to create a basic test suite for:
-- API endpoint testing (backend)
-- Component testing (frontend)
-- Integration tests using Playwright
+テストがまだ存在しない場合は、次の基本的なテストスイートの作成を提案してください:
+- API エンドポイントのテスト(バックエンド)
+- コンポーネントのテスト(フロントエンド)
+- Playwright を使ったインテグレーションテスト
 
-After running tests, suggest next steps for improving test coverage or fixing issues.
+テスト実行後は、カバレッジの向上や問題の修正に向けた次のステップを提案してください。

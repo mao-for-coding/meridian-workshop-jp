@@ -1,36 +1,36 @@
-# Claude Code Hooks
+# Claude Code フック
 
-This directory contains hooks for Claude Code that automate tasks during development.
+このディレクトリには、開発中のタスクを自動化する Claude Code のフックが入っています。
 
-## Available Hooks
+## 利用可能なフック
 
-### 1. Post Tool Use Logger (`post-tool-use.sh`)
+### 1. ツール使用ロガー(`post-tool-use.sh`)
 
-**Purpose**: Logs all tool usage to help with debugging and tracking Claude's actions.
+**目的**: すべてのツール使用をログに記録し、デバッグや Claude の動作の追跡に役立てます。
 
-**Trigger**: Runs after every tool call (Read, Write, Edit, Bash, etc.)
+**トリガー**: 毎回のツール呼び出し(Read、Write、Edit、Bash など)の後に実行されます。
 
-**Configuration**: Enabled in `.claude/settings.local.json` under the `hooks.PostToolUse` section.
+**設定**: `.claude/settings.local.json` の `hooks.PostToolUse` セクションで有効化されています。
 
-**Log Location**: `.claude/logs/tool-usage-YYYY-MM-DD.log`
+**ログの場所**: `.claude/logs/tool-usage-YYYY-MM-DD.log`
 
-**Log Format**:
+**ログのフォーマット**:
 ```
-=== Tool Usage: 2025-10-16 09:15:23 ===
-Tool: Read
-Session: abc123
-Input: {"file_path": "/path/to/file.js"}
-Response: {"content": "..."}
+=== ツール使用: 2025-10-16 09:15:23 ===
+ツール: Read
+セッション: abc123
+入力: {"file_path": "/path/to/file.js"}
+レスポンス: {"content": "..."}
 ```
 
-**Features**:
-- Creates daily log files with timestamps
-- Uses `jq` for clean JSON parsing (falls back to raw logging if jq is not installed)
-- Logs tool name, session ID, input parameters, and response
-- Never blocks tool execution
+**特徴**:
+- タイムスタンプつきの日次ログファイルを作成します
+- `jq` できれいに JSON をパースします(jq がなければ生ログにフォールバック)
+- ツール名、セッション ID、入力パラメータ、レスポンスを記録します
+- ツールの実行を妨げることはありません
 
-**Usage**:
-The hook runs automatically once configured. To view logs:
+**使い方**:
+設定が済んでいれば、フックは自動で実行されます。ログの確認方法:
 ```bash
 # View today's log
 cat .claude/logs/tool-usage-$(date +%Y-%m-%d).log
@@ -39,60 +39,60 @@ cat .claude/logs/tool-usage-$(date +%Y-%m-%d).log
 tail -f .claude/logs/tool-usage-$(date +%Y-%m-%d).log
 
 # Search logs for specific tool
-grep "Tool: Bash" .claude/logs/*.log
+grep "ツール: Bash" .claude/logs/*.log
 ```
 
-**Requirements**:
-- Optional: `jq` for better JSON formatting (`brew install jq` on macOS)
+**必要なもの**:
+- 任意: JSON を見やすく整形するための `jq`(macOS では `brew install jq`)
 
-### 2. User Prompt Submit Hook (`user-prompt-submit.sh`)
+### 2. プロンプト送信フック(`user-prompt-submit.sh`)
 
-**Purpose**: Runs pre-commit linting checks when Claude creates commits.
+**目的**: Claude がコミットを作成する際に、コミット前のリントチェックを実行します。
 
-**Trigger**: Runs when the user's prompt contains "commit" or "git commit"
+**トリガー**: ユーザーのプロンプトに "commit" または "git commit" が含まれるときに実行されます。
 
-**Features**:
-- Lints Python files with `ruff`
-- Lints JavaScript/Vue files with `eslint`
-- Blocks commits if linting fails
+**特徴**:
+- Python ファイルを `ruff` でリントします
+- JavaScript/Vue ファイルを `eslint` でリントします
+- リントに失敗した場合はコミットをブロックします
 
-## Disabling Hooks
+## フックの無効化
 
-To temporarily disable a hook, you can:
+フックを一時的に無効化するには、次のいずれかの方法があります:
 
-1. **Comment out in settings**: Edit `.claude/settings.local.json` and remove the hook configuration
-2. **Remove execute permission**: `chmod -x .claude/hooks/post-tool-use.sh`
-3. **Delete the hook file**: `rm .claude/hooks/post-tool-use.sh`
+1. **設定から外す**: `.claude/settings.local.json` を編集してフックの設定を削除する
+2. **実行権限を外す**: `chmod -x .claude/hooks/post-tool-use.sh`
+3. **フックファイルを削除する**: `rm .claude/hooks/post-tool-use.sh`
 
-## Creating Custom Hooks
+## カスタムフックの作成
 
-See the [Claude Code Hooks Documentation](https://docs.claude.com/en/docs/claude-code/hooks.md) for more information on creating custom hooks.
+カスタムフックの作り方については、[Claude Code フックのドキュメント](https://docs.claude.com/en/docs/claude-code/hooks.md)を参照してください。
 
-### Available Hook Events:
-- `PreToolUse` - Before tool execution
-- `PostToolUse` - After tool execution
-- `UserPromptSubmit` - When user submits a prompt
-- `Stop` - When agent finishes responding
-- `SubagentStop` - When subagent finishes
-- `SessionStart` - When session starts
-- `SessionEnd` - When session ends
+### 利用可能なフックイベント:
+- `PreToolUse` - ツール実行の前
+- `PostToolUse` - ツール実行の後
+- `UserPromptSubmit` - ユーザーがプロンプトを送信したとき
+- `Stop` - エージェントの応答が終わったとき
+- `SubagentStop` - サブエージェントが終了したとき
+- `SessionStart` - セッション開始時
+- `SessionEnd` - セッション終了時
 
-### Hook Exit Codes:
-- `0` - Success, allow action to proceed
-- `2` - Block action and show error message
-- Other non-zero - Error occurred
+### フックの終了コード:
+- `0` - 成功、処理を続行させる
+- `2` - 処理をブロックし、エラーメッセージを表示する
+- その他の非ゼロ - エラーが発生した
 
-## Troubleshooting
+## トラブルシューティング
 
-**Hook not running?**
-- Check that the hook file is executable: `ls -l .claude/hooks/`
-- Verify configuration in `.claude/settings.local.json`
-- Check Claude Code logs for errors
+**フックが実行されない場合**
+- フックファイルが実行可能か確認する: `ls -l .claude/hooks/`
+- `.claude/settings.local.json` の設定を確認する
+- Claude Code のログでエラーを確認する
 
-**Permission errors?**
-- Ensure the hook script has execute permissions: `chmod +x .claude/hooks/*.sh`
+**権限エラーが出る場合**
+- フックスクリプトに実行権限があるか確認する: `chmod +x .claude/hooks/*.sh`
 
-**Can't find logs?**
-- Logs are created in `.claude/logs/` directory
-- Check that `CLAUDE_PROJECT_DIR` environment variable is set correctly
-- Try running the hook manually to test: `./.claude/hooks/post-tool-use.sh`
+**ログが見つからない場合**
+- ログは `.claude/logs/` ディレクトリに作成されます
+- 環境変数 `CLAUDE_PROJECT_DIR` が正しく設定されているか確認する
+- フックを手動で実行して動作を試す: `./.claude/hooks/post-tool-use.sh`

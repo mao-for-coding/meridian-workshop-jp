@@ -1,35 +1,35 @@
-# Meridian Workshop
+# Meridian ワークショップ
 
-A Claude Code workshop. You're a consultant responding to an RFP, then delivering the engagement.
+Claude Code のワークショップです。あなたはコンサルタントとして RFP に応札し、その後、受注した案件を実際に遂行します。
 
-## Prerequisites
+## 事前準備
 
-Install these first:
+以下をあらかじめインストールしてください。
 
-- **Claude Code** — [docs.claude.com/claude-code](https://docs.claude.com/en/docs/claude-code/overview)
-- **Node.js 18+** — [nodejs.org](https://nodejs.org)
-- **uv** (Python package manager) — `curl -LsSf https://astral.sh/uv/install.sh | sh`
+- **Claude Code**:[docs.claude.com/claude-code](https://docs.claude.com/en/docs/claude-code/overview)
+- **Node.js 18 以上**:[nodejs.org](https://nodejs.org)
+- **uv**(Python パッケージマネージャー):`curl -LsSf https://astral.sh/uv/install.sh | sh`
 - **git**
 
-## Setup
+## セットアップ
 
-The workshop ends with opening a PR, so **fork this repo first**, then clone your fork:
+ワークショップの最後に PR を作成するため、**まずこのリポジトリを fork** し、その fork をクローンしてください。
 
 ```bash
-git clone https://github.com/<your-username>/meridian-workshop.git
-cd meridian-workshop
+git clone https://github.com/<your-username>/meridian-workshop-jp.git
+cd meridian-workshop-jp
 claude
 ```
 
-That's it. Say hi — Claude will take it from there.
+準備はこれだけです。あとは Claude に挨拶すれば、そこから先は Claude が案内してくれます。
 
-## If you get disconnected
+## 途中で接続が切れてしまったら
 
-Just run `claude` again in this directory and tell Claude where you left off.
+このディレクトリでもう一度 `claude` を実行し、どこまで進んでいたかを Claude に伝えてください。
 
-## What's in here
+## リポジトリの構成
 
-- `docs/rfp/` — the RFP and client background
-- `proposal/` — your response goes here (starts empty)
-- `client/`, `server/` — the application you'll be working on in Act 2
-- `.claude/` — project-level Claude Code config (agents, commands, skills) left by the previous vendor
+- `docs/rfp/`:RFP とクライアントの背景資料
+- `proposal/`:提案書の置き場所(最初は空です)
+- `client/`、`server/`:第2幕で扱うアプリケーション本体
+- `.claude/`:前任ベンダーが残したプロジェクトレベルの Claude Code 設定(エージェント、コマンド、スキル)
