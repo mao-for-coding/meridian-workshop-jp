@@ -1,109 +1,109 @@
-# Test Summary
+# テストサマリー
 
-## Test Coverage Overview
+## テストカバレッジの概要
 
-All backend API tests are passing with **55 tests** covering the entire application functionality.
+バックエンド API のテストは **55 件**すべてがパスしており、アプリケーションの全機能をカバーしています。
 
-## Test Suites
+## テストスイート
 
-### 1. Dashboard Endpoints (13 tests)
-- ✅ Dashboard summary retrieval
-- ✅ Data type validation
-- ✅ Non-negative value validation
-- ✅ Filtering by warehouse, category, status, and month
-- ✅ Multiple filter combinations
-- ✅ Power Supplies category support
-- ✅ **Actual calculations** for:
-  - Pending orders count (Processing + Backordered)
-  - Low stock items (at or below reorder point)
-  - Total inventory value (quantity × unit cost)
+### 1. ダッシュボード関連の endpoint(13 テスト)
+- ✅ ダッシュボードサマリーの取得
+- ✅ データ型の検証
+- ✅ 非負値の検証
+- ✅ 倉庫、カテゴリ、ステータス、月によるフィルタリング
+- ✅ 複数フィルターの組み合わせ
+- ✅ Power Supplies カテゴリのサポート
+- ✅ 以下の項目についての**実際の計算**の検証:
+  - 保留中注文数(Processing + Backordered)
+  - 在庫僅少アイテム(発注点以下のもの)
+  - 在庫総額(数量 × 単価)
 
-### 2. Inventory Endpoints (10 tests)
-- ✅ Get all inventory items
-- ✅ Filter by warehouse
-- ✅ Filter by category (including Power Supplies)
-- ✅ Combined warehouse and category filtering
-- ✅ "all" filter handling
-- ✅ Get specific item by ID
-- ✅ 404 handling for non-existent items
-- ✅ Required fields validation
-- ✅ Quantity and cost type validation
-- ✅ Non-negative value validation
+### 2. 在庫関連の endpoint(10 テスト)
+- ✅ 全在庫アイテムの取得
+- ✅ 倉庫によるフィルタリング
+- ✅ カテゴリによるフィルタリング(Power Supplies を含む)
+- ✅ 倉庫とカテゴリの組み合わせフィルタリング
+- ✅ "all" フィルターの処理
+- ✅ ID を指定した特定アイテムの取得
+- ✅ 存在しないアイテムに対する 404 処理
+- ✅ 必須フィールドの検証
+- ✅ 数量とコストの型検証
+- ✅ 非負値の検証
 
-### 3. Orders Endpoints (15 tests)
-- ✅ Get all orders
-- ✅ Filter by warehouse, category, status, month
-- ✅ Quarter filtering (Q1-2025)
-- ✅ Multiple filter combinations
-- ✅ Power Supplies category orders
-- ✅ Get specific order by ID
-- ✅ 404 handling for non-existent orders
-- ✅ Order items structure validation
-- ✅ Valid status values (Delivered, Shipped, Processing, Backordered)
-- ✅ Date format validation (ISO format)
-- ✅ Delivered orders have actual_delivery date
-- ✅ **Actual calculation**: Total value = sum(quantity × unit_price)
+### 3. 注文関連の endpoint(15 テスト)
+- ✅ 全注文の取得
+- ✅ 倉庫、カテゴリ、ステータス、月によるフィルタリング
+- ✅ 四半期でのフィルタリング(Q1-2025)
+- ✅ 複数フィルターの組み合わせ
+- ✅ Power Supplies カテゴリの注文
+- ✅ ID を指定した特定注文の取得
+- ✅ 存在しない注文に対する 404 処理
+- ✅ 注文アイテムの構造検証
+- ✅ ステータス値の妥当性(Delivered、Shipped、Processing、Backordered)
+- ✅ 日付フォーマットの検証(ISO 形式)
+- ✅ 配達済み注文に actual_delivery 日付があることの確認
+- ✅ **実際の計算**の検証: 合計金額 = sum(quantity × unit_price)
 
-### 4. Demand Forecast Endpoints (5 tests)
-- ✅ Get demand forecasts
-- ✅ Valid trend values (increasing, stable, decreasing)
-- ✅ Non-negative demand values
-- ✅ **NEW**: Stable items have < 2% change
-- ✅ **NEW**: At least 5 stable demand items exist
-- ✅ **NEW**: New items (Temperature Sensor Module, Logic Controller Board) are present and stable
+### 4. 需要予測関連の endpoint(5 テスト)
+- ✅ 需要予測の取得
+- ✅ トレンド値の妥当性(increasing、stable、decreasing)
+- ✅ 需要値が非負であることの確認
+- ✅ **新規**: stable なアイテムの変化率が 2% 未満であること
+- ✅ **新規**: 需要が安定しているアイテムが 5 件以上存在すること
+- ✅ **新規**: 新規アイテム(Temperature Sensor Module、Logic Controller Board)が存在し、かつ stable であること
 
-### 5. Backlog Endpoints (4 tests)
-- ✅ Get backlog items
-- ✅ Valid priority values (high, medium, low)
-- ✅ Non-negative quantities
-- ✅ Non-negative days delayed
+### 5. バックログ関連の endpoint(4 テスト)
+- ✅ バックログアイテムの取得
+- ✅ 優先度の値の妥当性(high、medium、low)
+- ✅ 数量が非負であることの確認
+- ✅ 遅延日数が非負であることの確認
 
-### 6. Spending Endpoints (6 tests)
-- ✅ Get spending summary
-- ✅ Get monthly spending data
-- ✅ **NEW**: All cost categories present (procurement, operational, labor, overhead)
-- ✅ **NEW**: Monthly spending has variety (not all the same values)
-- ✅ Get category spending
-- ✅ Get recent transactions
+### 6. 支出関連の endpoint(6 テスト)
+- ✅ 支出サマリーの取得
+- ✅ 月次支出データの取得
+- ✅ **新規**: すべてのコストカテゴリが揃っていること(procurement、operational、labor、overhead)
+- ✅ **新規**: 月次支出にばらつきがあること(全月同じ値ではないこと)
+- ✅ カテゴリ別支出の取得
+- ✅ 直近の取引履歴の取得
 
-### 7. Root Endpoint (2 tests)
-- ✅ Root endpoint returns API info
-- ✅ Message and version structure
+### 7. ルート endpoint(2 テスト)
+- ✅ ルート endpoint が API 情報を返すこと
+- ✅ メッセージとバージョンの構造
 
-## Key Testing Principles
+## テストにおける重要な原則
 
-### ✅ No Hardcoded Values
-Tests verify **actual calculations** and **real data relationships**:
-- Dashboard metrics are calculated from actual order/inventory data
-- Order totals are verified against item quantities and prices
-- Demand forecast percentages are calculated from actual current/forecasted values
-- Spending variety is detected by checking for unique values across months
+### ✅ ハードコードされた値を使わない
+テストでは、**実際の計算結果**と**本物のデータ間の関係**を検証しています。
+- ダッシュボードの指標は、実際の注文・在庫データから算出されます
+- 注文の合計金額は、アイテムの数量と価格から検算されます
+- 需要予測のパーセンテージは、実際の現在値と予測値から計算されます
+- 支出のばらつきは、各月の値がユニークかどうかで判定されます
 
-### ✅ Real Validation
-Tests ensure:
-- Data structures match expected schemas
-- Filters work correctly
-- Calculations are accurate
-- Business logic is sound (e.g., stable demand < 2% change)
+### ✅ 実質的な検証
+テストでは以下を確認しています。
+- データ構造が想定どおりのスキーマに一致していること
+- フィルターが正しく機能すること
+- 計算が正確であること
+- ビジネスロジックが妥当であること(例: 安定した需要の変化率は 2% 未満)
 
-### ✅ New Functionality Covered
-Recent additions are fully tested:
-- Stable demand items with < 2% change requirement
-- New demand forecast items (5 total stable items)
-- Varied monthly spending data
-- Cost category completeness
+### ✅ 新機能のカバー
+最近追加された機能もすべてテストされています。
+- 変化率 2% 未満という条件を満たす stable な需要アイテム
+- 新しい需要予測アイテム(stable なアイテムは計 5 件)
+- ばらつきのある月次支出データ
+- コストカテゴリの網羅性
 
-## Running the Tests
+## テストの実行方法
 
 ```bash
 cd tests
 python -m pytest backend/ -v
 ```
 
-## Test Results
-- **Total Tests**: 55
-- **Passed**: 55 ✅
-- **Failed**: 0
-- **Warnings**: 3 (configuration-related, non-critical)
+## テスト結果
+- **テスト総数**: 55
+- **成功**: 55 ✅
+- **失敗**: 0
+- **警告**: 3(設定関連の軽微なもので、問題ありません)
 
-All tests validate the **actual implementation** without cheating or hardcoding success values!
+すべてのテストが、成功値のハードコードなどのごまかしをせずに、**実際の実装**を検証しています。

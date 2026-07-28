@@ -7,8 +7,8 @@ const translations = {
   ja
 }
 
-// Load saved locale from localStorage, default to 'en'
-const savedLocale = localStorage.getItem('app-locale') || 'en'
+// localStorage に保存されたロケールを読み込む。デフォルトは 'ja'
+const savedLocale = localStorage.getItem('app-locale') || 'ja'
 const currentLocale = ref(savedLocale)
 
 // Currency is automatically set based on locale (en -> USD, ja -> JPY)

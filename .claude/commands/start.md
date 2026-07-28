@@ -1,16 +1,16 @@
 ---
-description: Start the frontend and backend servers
+description: フロントエンドとバックエンドのサーバーを起動します
 ---
 
-Kill any existing servers on ports 3000 and 8001, then start both the backend (FastAPI on port 8001) and frontend (Vite on port 3000) development servers in the background.
+ポート 3000 と 8001 で動いている既存のサーバーをすべて停止してから、バックエンド(FastAPI、ポート 8001)とフロントエンド(Vite、ポート 3000)の開発サーバーをバックグラウンドで起動してください。
 
-**Backend:** `cd server && uv run python main.py`
-**Frontend:** `cd client && npm run dev`
+**バックエンド:** `cd server && uv run python main.py`
+**フロントエンド:** `cd client && npm run dev`
 
-To kill existing processes on a port:
+ポートを使用中のプロセスを停止する方法:
 - macOS/Linux: `lsof -ti:3000,8001 | xargs kill -9 2>/dev/null || true`
-- Windows: Use `netstat -aon | findstr :PORT` to find PIDs, then `taskkill /F /PID <pid>`
+- Windows: `netstat -aon | findstr :PORT` で PID を調べてから `taskkill /F /PID <pid>`
 
-After starting, verify:
-- Backend: http://localhost:8001/docs
-- Frontend: http://localhost:3000
+起動後、次の URL で動作を確認してください:
+- バックエンド: http://localhost:8001/docs
+- フロントエンド: http://localhost:3000

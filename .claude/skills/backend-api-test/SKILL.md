@@ -1,15 +1,15 @@
 ---
 name: backend-api-test
-description: Guidelines for writing backend API tests using pytest and FastAPI TestClient. Use this skill when writing or modifying tests in tests/backend directory.
+description: pytest と FastAPI TestClient を使ったバックエンド API テストの作成ガイドライン。tests/backend ディレクトリ内のテストを作成・修正する際に、このスキルを使用してください。
 ---
 
-# Backend API Testing Guidelines
+# バックエンド API テストのガイドライン
 
-This skill provides comprehensive guidelines for writing backend API tests for the Factory Inventory Management System. Follow these patterns to ensure consistent, thorough test coverage.
+このスキルは、工場在庫管理システムのバックエンド API テストを書くための包括的なガイドラインです。一貫性のある、抜け漏れのないテストカバレッジを実現するために、以下のパターンに従ってください。
 
-## Directory Structure
+## ディレクトリ構成
 
-All backend tests must be placed in `tests/backend/`:
+バックエンドのテストはすべて `tests/backend/` に配置します。
 
 ```
 tests/backend/
@@ -20,15 +20,15 @@ tests/backend/
 └── test_misc_endpoints.py # Other endpoint tests
 ```
 
-## File Organization
+## ファイルの整理方法
 
-### 1. File Naming
-- Use `test_<feature>.py` format (e.g., `test_inventory.py`, `test_orders.py`)
-- Group related endpoints in the same file
-- Create new files for distinct API feature areas
+### 1. ファイル命名
+- `test_<feature>.py` という形式を使います(例: `test_inventory.py`、`test_orders.py`)
+- 関連する endpoint は同じファイルにまとめます
+- API の機能領域が明確に異なる場合は、新しいファイルを作成します
 
-### 2. Test Class Structure
-Organize tests within a class using descriptive names:
+### 2. テストクラスの構成
+わかりやすい名前を付けたクラスの中にテストをまとめます。
 
 ```python
 """
@@ -45,11 +45,11 @@ class Test<Feature>Endpoints:
         # Test implementation
 ```
 
-## Core Testing Patterns
+## テストの基本パターン
 
-### 1. Basic Endpoint Tests
+### 1. 基本的な endpoint テスト
 
-**Always test the happy path first:**
+**まずは正常系(happy path)からテストします。**
 
 ```python
 def test_get_all_orders(self, client):
@@ -68,9 +68,9 @@ def test_get_all_orders(self, client):
     # ... other required fields
 ```
 
-### 2. Filter Testing
+### 2. フィルターのテスト
 
-Test each query parameter filter individually and in combination:
+各クエリパラメータのフィルターを、単独と組み合わせの両方でテストします。
 
 ```python
 def test_get_orders_by_warehouse(self, client):
@@ -101,15 +101,15 @@ def test_get_orders_multiple_filters(self, client):
         assert order["status"].lower() == "delivered"
 ```
 
-**Common filters to test:**
-- `warehouse` - Filter by warehouse location
-- `category` - Filter by product category
-- `status` - Filter by order status (orders only)
-- `month` - Filter by month in format `YYYY-MM` or quarter `Q1-2025`
+**テストしておきたい主なフィルター:**
+- `warehouse`: 倉庫の所在地でフィルタリング
+- `category`: 製品カテゴリでフィルタリング
+- `status`: 注文ステータスでフィルタリング(注文のみ)
+- `month`: 月でフィルタリング。形式は `YYYY-MM`、または四半期指定の `Q1-2025`
 
-### 3. Single Resource Tests
+### 3. 単一リソースのテスト
 
-Test fetching individual resources by ID:
+ID を指定して個別のリソースを取得するテストです。
 
 ```python
 def test_get_order_by_id(self, client):
@@ -138,9 +138,9 @@ def test_get_nonexistent_order(self, client):
     assert "not found" in data["detail"].lower()
 ```
 
-### 4. Data Structure Validation
+### 4. データ構造の検証
 
-Verify the response structure matches the API contract:
+レスポンスの構造が API の契約どおりであることを確認します。
 
 ```python
 def test_order_items_structure(self, client):
@@ -161,9 +161,9 @@ def test_order_items_structure(self, client):
             assert isinstance(item["unit_price"], (int, float))
 ```
 
-### 5. Data Type Validation
+### 5. データ型の検証
 
-Ensure numeric fields have correct types and valid ranges:
+数値フィールドの型が正しく、値が妥当な範囲に収まっていることを確認します。
 
 ```python
 def test_inventory_quantity_types(self, client):
@@ -180,9 +180,9 @@ def test_inventory_quantity_types(self, client):
         assert item["unit_cost"] >= 0
 ```
 
-### 6. Business Logic Validation
+### 6. ビジネスロジックの検証
 
-Test calculated values and business rules:
+計算値やビジネスルールをテストします。
 
 ```python
 def test_order_total_value_calculation(self, client):
@@ -204,9 +204,9 @@ def test_order_total_value_calculation(self, client):
         assert abs(order["total_value"] - calculated_total) < 0.01
 ```
 
-### 7. Enum/Status Value Validation
+### 7. 列挙値・ステータス値の検証
 
-Verify constrained fields have valid values:
+取りうる値が限定されたフィールドについて、値が妥当であることを確認します。
 
 ```python
 def test_order_status_values(self, client):
@@ -220,9 +220,9 @@ def test_order_status_values(self, client):
         assert order["status"].lower() in valid_statuses
 ```
 
-### 8. Date Format Validation
+### 8. 日付フォーマットの検証
 
-Verify date fields are properly formatted:
+日付フィールドが正しい形式であることを確認します。
 
 ```python
 def test_order_dates_format(self, client):
@@ -239,9 +239,9 @@ def test_order_dates_format(self, client):
         assert "T" in order["expected_delivery"]  # Has time component
 ```
 
-### 9. Cross-Endpoint Validation
+### 9. endpoint 間の整合性検証
 
-Test that aggregated endpoints match raw data:
+集計系の endpoint が元データと一致していることをテストします。
 
 ```python
 def test_dashboard_pending_orders_calculation(self, client):
@@ -263,15 +263,15 @@ def test_dashboard_pending_orders_calculation(self, client):
     assert dashboard_data["pending_orders"] == pending_count
 ```
 
-## Using Fixtures
+## Fixture の使い方
 
-### Available Fixtures (from conftest.py)
+### 利用できる fixture(conftest.py で定義)
 
-1. **`client`** - FastAPI TestClient instance (required for all tests)
-2. **`sample_inventory_item`** - Example inventory item structure
-3. **`sample_order`** - Example order structure
+1. **`client`**: FastAPI TestClient のインスタンス(すべてのテストで必須)
+2. **`sample_inventory_item`**: 在庫アイテムのサンプル構造
+3. **`sample_order`**: 注文のサンプル構造
 
-### Using the Client Fixture
+### client fixture の使い方
 
 ```python
 def test_example(self, client):
@@ -280,9 +280,9 @@ def test_example(self, client):
     assert response.status_code == 200
 ```
 
-### Creating New Fixtures
+### 新しい fixture の作成
 
-Add shared fixtures to [conftest.py](tests/backend/conftest.py):
+共有する fixture は [conftest.py](tests/backend/conftest.py) に追加します。
 
 ```python
 @pytest.fixture
@@ -295,29 +295,29 @@ def sample_warehouse_data():
     }
 ```
 
-## Test Naming Conventions
+## テストの命名規則
 
-Use descriptive names that clearly indicate what is being tested:
+何をテストしているのかが一目でわかる名前を付けてください。
 
-- `test_get_all_<resources>` - Get all items without filters
-- `test_get_<resource>_by_<filter>` - Single filter tests
-- `test_get_<resource>_multiple_filters` - Combined filter tests
-- `test_get_<resource>_by_id` - Single item retrieval
-- `test_get_nonexistent_<resource>` - 404 handling
-- `test_<resource>_<field>_structure` - Data structure validation
-- `test_<resource>_<field>_types` - Data type validation
-- `test_<resource>_<calculation>_calculation` - Business logic
+- `test_get_all_<resources>`: フィルターなしで全件取得
+- `test_get_<resource>_by_<filter>`: 単一フィルターのテスト
+- `test_get_<resource>_multiple_filters`: フィルターの組み合わせテスト
+- `test_get_<resource>_by_id`: 単一アイテムの取得
+- `test_get_nonexistent_<resource>`: 404 処理
+- `test_<resource>_<field>_structure`: データ構造の検証
+- `test_<resource>_<field>_types`: データ型の検証
+- `test_<resource>_<calculation>_calculation`: ビジネスロジックの検証
 
-## Common Assertions
+## よく使う assertion
 
-### Status Codes
+### ステータスコード
 ```python
 assert response.status_code == 200  # Success
 assert response.status_code == 404  # Not found
 assert response.status_code == 422  # Validation error
 ```
 
-### Response Types
+### レスポンスの型
 ```python
 data = response.json()
 assert isinstance(data, list)    # Array response
@@ -325,84 +325,84 @@ assert isinstance(data, dict)    # Object response
 assert len(data) > 0             # Has data
 ```
 
-### Field Presence
+### フィールドの存在確認
 ```python
 assert "field_name" in data
 assert "detail" in error_response  # Error messages
 ```
 
-### String Comparisons (Case-Insensitive)
+### 文字列比較(大文字小文字を区別しない)
 ```python
 assert order["status"].lower() == "delivered"
 assert item["category"].lower() == "power supplies"
 ```
 
-### Floating Point Comparisons
+### 浮動小数点数の比較
 ```python
 # Allow small differences for float calculations
 assert abs(calculated - expected) < 0.01
 ```
 
-## API Endpoint Reference
+## API endpoint リファレンス
 
-### Inventory Endpoints
-- `GET /api/inventory` - All inventory items
-  - Filters: `warehouse`, `category`
-- `GET /api/inventory/{id}` - Single inventory item
+### 在庫関連の endpoint
+- `GET /api/inventory`: 全在庫アイテム
+  - フィルター: `warehouse`、`category`
+- `GET /api/inventory/{id}`: 単一の在庫アイテム
 
-### Orders Endpoints
-- `GET /api/orders` - All orders
-  - Filters: `warehouse`, `category`, `status`, `month`
-- `GET /api/orders/{id}` - Single order
+### 注文関連の endpoint
+- `GET /api/orders`: 全注文
+  - フィルター: `warehouse`、`category`、`status`、`month`
+- `GET /api/orders/{id}`: 単一の注文
 
-### Dashboard Endpoints
-- `GET /api/dashboard/summary` - Dashboard summary
-  - Filters: `warehouse`, `category`, `status`, `month`
+### ダッシュボード関連の endpoint
+- `GET /api/dashboard/summary`: ダッシュボードサマリー
+  - フィルター: `warehouse`、`category`、`status`、`month`
 
-### Other Endpoints
-- `GET /api/demand` - Demand forecast (no filters)
-- `GET /api/backlog` - Backlog items (no filters)
-- `GET /api/spending/*` - Spending data endpoints
+### その他の endpoint
+- `GET /api/demand`: 需要予測(フィルターなし)
+- `GET /api/backlog`: バックログアイテム(フィルターなし)
+- `GET /api/spending/*`: 支出データの各 endpoint
 
-## Common Values for Testing
+## テストでよく使う値
 
-### Warehouses
+### 倉庫
 - San Francisco
 - London
 - Tokyo
 
-### Categories
+### カテゴリ
 - Circuit Boards
 - Sensors
 - Power Supplies
 - Connectors
 - Mechanical Components
 
-### Order Statuses
+### 注文ステータス
 - Delivered
 - Shipped
 - Processing
 - Backordered
 
-### Date Formats
-- Single month: `2025-01`, `2025-02`, etc.
-- Quarter: `Q1-2025`, `Q2-2025`, etc.
-- All: `all`
+### 日付フォーマット
+- 単月指定: `2025-01`、`2025-02` など
+- 四半期指定: `Q1-2025`、`Q2-2025` など
+- 全期間: `all`
 
-## Best Practices
+## ベストプラクティス
 
-1. **Test one thing per test** - Each test should verify a single behavior
-2. **Use descriptive assertions** - Clear error messages help debugging
-3. **Test edge cases** - Empty results, nonexistent IDs, invalid filters
-4. **Verify data integrity** - Check types, ranges, and calculated values
-5. **Test filters independently** - Then test combinations
-6. **Use case-insensitive comparisons** - For string fields like status/category
-7. **Allow floating point tolerance** - Use `abs(a - b) < 0.01` for money calculations
-8. **Test error responses** - Verify proper 404 handling
-9. **Validate complete structure** - Check all required fields are present
-10. **Cross-validate endpoints** - Dashboard should match raw data
+1. **1 テスト 1 検証**: 各テストでは 1 つの振る舞いだけを確認します
+2. **わかりやすい assertion を書く**: エラーメッセージが明快だとデバッグが楽になります
+3. **エッジケースをテストする**: 空の結果、存在しない ID、無効なフィルターなど
+4. **データの整合性を確認する**: 型、値の範囲、計算値をチェックします
+5. **フィルターは単独でテストしてから組み合わせる**: まず個別に、その後に組み合わせを試します
+6. **文字列比較では大文字小文字を区別しない**: status や category のような文字列フィールドに適用します
+7. **浮動小数点数には許容誤差を設ける**: 金額計算には `abs(a - b) < 0.01` を使います
+8. **エラーレスポンスもテストする**: 404 が正しく返ることを確認します
+9. **構造全体を検証する**: 必須フィールドがすべて揃っていることを確認します
+10. **endpoint 間で相互検証する**: ダッシュボードの値は元データと一致している必要があります
 
-## Running Tests
+## テストの実行方法
 
 ```bash
 # Run all backend tests
@@ -424,7 +424,7 @@ pytest tests/backend/ -v
 pytest tests/backend/ --cov=server
 ```
 
-## Example: Complete Test File Template
+## 例: テストファイル一式のテンプレート
 
 ```python
 """
@@ -485,13 +485,13 @@ class Test<Feature>Endpoints:
         assert "not found" in data["detail"].lower()
 ```
 
-## Key Reminders
+## 重要ポイントのまとめ
 
-- **Always use the `client` fixture** - It's the TestClient for making API calls
-- **Test filters thoroughly** - Individual filters and combinations
-- **Validate response structure** - Check all required fields exist
-- **Use lowercase for string comparisons** - Categories and statuses vary in case
-- **Test both success and error paths** - 200 and 404 responses
-- **Verify data types** - Use `isinstance()` for proper type checking
-- **Test business logic** - Calculations, aggregations, and derived values
-- **Keep tests independent** - Each test should work in isolation
+- **必ず `client` fixture を使う**: API 呼び出しに使う TestClient です
+- **フィルターは徹底的にテストする**: 単独のフィルターも、組み合わせも確認します
+- **レスポンス構造を検証する**: 必須フィールドがすべて存在することを確認します
+- **文字列比較は小文字に揃えて行う**: カテゴリやステータスは大文字小文字が揺れることがあります
+- **成功と失敗の両方のパスをテストする**: 200 と 404 のレスポンスを確認します
+- **データ型を検証する**: 型チェックには `isinstance()` を使います
+- **ビジネスロジックをテストする**: 計算、集計、派生値を確認します
+- **テストの独立性を保つ**: 各テストは単独で動作する必要があります

@@ -1,11 +1,11 @@
 ---
-description: Create a new demo branch with auto-incrementing number
+description: 番号を自動で採番して新しいデモブランチを作成します
 ---
 
-Create a new git branch named "demo-branch" (or "demo-branch-2", "demo-branch-3", etc. if it already exists).
+"demo-branch" という名前の新しい git ブランチを作成してください(すでに存在する場合は "demo-branch-2"、"demo-branch-3" のように採番します)。
 
-Steps:
-1. Check if "demo-branch" exists: `git branch --list demo-branch`
-2. If it exists, check "demo-branch-2", "demo-branch-3", etc. until you find an available name
-3. Create and checkout the new branch: `git checkout -b <branch-name>`
-4. Confirm the branch was created and show current status
+手順:
+1. "demo-branch" が存在するか確認する: `git branch --list demo-branch`
+2. 存在する場合は "demo-branch-2"、"demo-branch-3" と順に確認し、空いている名前を見つける
+3. 新しいブランチを作成してチェックアウトする: `git checkout -b <branch-name>`
+4. ブランチが作成されたことを確認し、現在の状態を表示する

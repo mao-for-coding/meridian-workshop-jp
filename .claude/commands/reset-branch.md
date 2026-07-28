@@ -1,20 +1,20 @@
 ---
-description: Switch to main and delete previous branch
+description: main に切り替えて、直前のブランチを削除します
 ---
 
-Switch back to main branch and delete the branch you were on, discarding all commits and changes. Also closes any upstream pull requests for the deleted branch.
+main ブランチに戻り、それまで作業していたブランチをコミットや変更ごと削除してください。削除するブランチに紐づくリモートのプルリクエストがあれば、あわせてクローズします。
 
-Steps:
-1. Check current branch with `git branch --show-current`
-2. If already on main/master, inform user no reset needed
-3. If on feature branch:
-   - Show commits to be lost: `git log main..HEAD --oneline`
-   - Store the branch name
-   - Use GitHub MCP to find and close any PRs for this branch: `mcp__github__list_pull_requests` (filter by head branch), then `mcp__github__update_pull_request` to close them
-   - Switch to main: `git checkout main`
-   - Delete the feature branch: `git branch -D <branch-name>`
-   - Clean up working directory: `git reset --hard HEAD` to discard all tracked file changes
-   - Remove untracked files: `git clean -fd` to remove untracked files and directories
-   - Show result: `git status` and `git branch`
+手順:
+1. `git branch --show-current` で現在のブランチを確認する
+2. すでに main/master にいる場合は、リセット不要であることをユーザーに伝える
+3. フィーチャーブランチにいる場合:
+   - 失われるコミットを表示する: `git log main..HEAD --oneline`
+   - ブランチ名を控えておく
+   - GitHub MCP でこのブランチの PR を探してクローズする: `mcp__github__list_pull_requests`(head ブランチで絞り込み)で見つけ、`mcp__github__update_pull_request` でクローズする
+   - main に切り替える: `git checkout main`
+   - フィーチャーブランチを削除する: `git branch -D <branch-name>`
+   - 作業ディレクトリをクリーンアップする: `git reset --hard HEAD` で追跡ファイルの変更をすべて破棄する
+   - 未追跡ファイルを削除する: `git clean -fd` で未追跡のファイルとディレクトリを取り除く
+   - 結果を表示する: `git status` と `git branch`
 
-WARNING: Permanently deletes the feature branch, all its commits/changes, and closes upstream PRs. Also discards ALL working directory changes and removes untracked files.
+警告: フィーチャーブランチとそのコミット・変更はすべて完全に削除され、リモートの PR もクローズされます。作業ディレクトリの変更もすべて破棄され、未追跡ファイルも削除されます。

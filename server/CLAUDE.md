@@ -1,8 +1,8 @@
 # CLAUDE.md - Server
 
-This file provides guidance to Claude Code (claude.ai/code) when working with the FastAPI backend.
+このファイルは、Claude Code (claude.ai/code) が FastAPI バックエンドを扱う際のガイドラインです。
 
-## Running the Server
+## サーバーの起動
 
 ```bash
 # From server directory
@@ -11,33 +11,33 @@ uv run python main.py
 # API docs at http://localhost:8001/docs
 ```
 
-## Development Best Practices
+## 開発のベストプラクティス
 
-### API Design Principles
+### API 設計の原則
 
-**RESTful Design:**
-- Use appropriate HTTP methods (GET for retrieval, POST for creation, etc.)
-- Return proper status codes (200, 201, 404, 400, 500)
-- Use plural nouns for resource endpoints (`/api/orders`, not `/api/order`)
-- Keep URLs simple and predictable
+**RESTful な設計:**
+- HTTP メソッドは用途に応じて使い分けます(取得は GET、作成は POST など)
+- 適切なステータスコードを返します(200, 201, 404, 400, 500)
+- リソースの endpoint には複数形の名詞を使います(`/api/order` ではなく `/api/orders`)
+- URL はシンプルで予測しやすい形に保ちます
 
-**Request/Response:**
-- Always validate input with Pydantic models
-- Return consistent response structure
-- Include error details in error responses
-- Use ISO 8601 for dates (YYYY-MM-DD or YYYY-MM-DDTHH:MM:SS)
+**リクエスト/レスポンス:**
+- 入力は必ず Pydantic モデルで検証します
+- レスポンスの構造は一貫させます
+- エラーレスポンスにはエラーの詳細を含めます
+- 日付は ISO 8601 形式を使います(YYYY-MM-DD または YYYY-MM-DDTHH:MM:SS)
 
-### Adding New Endpoints
+### 新しい endpoint の追加
 
-**Process:**
-1. Define Pydantic model for data validation
-2. Create endpoint function with clear name
-3. Add route decorator with explicit path
-4. Implement business logic
-5. Handle errors appropriately
-6. Write tests in `tests/backend/`
+**手順:**
+1. データ検証用の Pydantic モデルを定義する
+2. 分かりやすい名前で endpoint 関数を作成する
+3. パスを明示した route デコレータを付ける
+4. ビジネスロジックを実装する
+5. エラーを適切に処理する
+6. `tests/backend/` にテストを書く
 
-**Example Pattern:**
+**実装パターンの例:**
 ```python
 class MyModel(BaseModel):
     id: str
@@ -61,31 +61,31 @@ def get_resources(
     return results
 ```
 
-### Data Model Best Practices
+### データモデルのベストプラクティス
 
-**Pydantic Models:**
-- Define once, use everywhere
-- Make optional fields explicitly `Optional[Type]`
-- Use descriptive field names
-- Add default values where appropriate
-- Keep models close to their usage
+**Pydantic モデル:**
+- 一度定義したら、あらゆる場所でそれを使い回します
+- 任意項目は `Optional[Type]` と明示します
+- フィールド名は内容が伝わるものにします
+- 適切な箇所にはデフォルト値を設定します
+- モデルは使用箇所の近くに置きます
 
-**Model Updates:**
-- When adding fields to JSON data, update Pydantic models
-- When removing fields, mark as Optional first, then remove
-- Consider backwards compatibility
-- Update tests when models change
+**モデルの更新:**
+- JSON データにフィールドを追加したら、Pydantic モデルも更新します
+- フィールドを削除する場合は、まず Optional にしてから削除します
+- 後方互換性を考慮します
+- モデルを変更したらテストも更新します
 
-### Filtering Best Practices
+### フィルタリングのベストプラクティス
 
-**Standard Pattern:**
-- Accept filter parameters as optional query params
-- Check for 'all' value and skip that filter
-- Use lowercase comparison for case-insensitive matching
-- Apply filters sequentially for code clarity
-- Don't mutate original data - filter on copies
+**標準パターン:**
+- フィルタパラメータは省略可能な query パラメータとして受け取ります
+- 値が 'all' の場合はそのフィルタをスキップします
+- 大文字小文字を区別しない比較には小文字化して比較します
+- コードの見通しをよくするため、フィルタは順番に適用します
+- 元データは変更せず、コピーに対してフィルタします
 
-**Filter Implementation:**
+**フィルタの実装:**
 ```python
 def filter_data(data, warehouse=None, category=None):
     """Filter data by multiple criteria."""
@@ -102,15 +102,15 @@ def filter_data(data, warehouse=None, category=None):
     return filtered
 ```
 
-**Date/Time Filtering:**
-- Support both direct month match (2025-01) and quarters (Q1-2025)
-- Parse date strings safely
-- Handle missing/null dates gracefully
-- Consider timezone if adding real database
+**日付・時刻のフィルタリング:**
+- 月の直接指定(2025-01)と四半期指定(Q1-2025)の両方に対応します
+- 日付文字列は安全にパースします
+- 日付が欠損・null の場合も適切に処理します
+- 実際のデータベースを導入する場合はタイムゾーンも考慮します
 
-### Error Handling
+### エラー処理
 
-**Use HTTPException:**
+**HTTPException を使います:**
 ```python
 from fastapi import HTTPException
 
@@ -125,56 +125,56 @@ def get_item(item_id: str):
     return item
 ```
 
-**Best Practices:**
-- Return 404 for "not found" errors
-- Return 400 for bad input/validation errors
-- Return 500 for server errors (let FastAPI handle these)
-- Include helpful error messages
-- Log errors for debugging
+**ベストプラクティス:**
+- 「見つからない」エラーには 404 を返します
+- 不正な入力や検証エラーには 400 を返します
+- サーバーエラーには 500 を返します(FastAPI に任せて構いません)
+- 役に立つエラーメッセージを含めます
+- デバッグのためにエラーをログに残します
 
-### Mock Data Management
+### モックデータの管理
 
-**Pattern:**
-- Load all data from JSON files at startup
-- Data lives in memory during server runtime
-- Changes don't persist (restart reloads from files)
-- Keep JSON files well-formatted and validated
+**パターン:**
+- すべてのデータは起動時に JSON ファイルから読み込みます
+- データはサーバー稼働中、メモリ上に保持されます
+- 変更は永続化されません(再起動するとファイルから再読み込み)
+- JSON ファイルは整形と検証を保った状態にしておきます
 
-**Adding New Data:**
-1. Update JSON file in `server/data/`
-2. Update Pydantic model if structure changed
-3. Restart server to reload data
-4. Verify with API docs (/docs endpoint)
+**新しいデータの追加:**
+1. `server/data/` の JSON ファイルを更新する
+2. 構造が変わった場合は Pydantic モデルも更新する
+3. サーバーを再起動してデータを再読み込みする
+4. API docs(/docs endpoint)で確認する
 
-**Data Consistency:**
-- Ensure SKUs in orders reference valid inventory items
-- Keep category names consistent across data files
-- Use same date format everywhere
-- Validate JSON structure before committing
+**データの整合性:**
+- 注文内の SKU が有効な在庫アイテムを参照していることを確認します
+- カテゴリ名はデータファイル間で一貫させます
+- 日付フォーマットはすべての箇所で統一します
+- コミット前に JSON の構造を検証します
 
-### CORS Configuration
+### CORS の設定
 
-**Development:**
-- Allow all origins during development (`allow_origins=["*"]`)
-- Useful for frontend dev server on different port
+**開発時:**
+- 開発中はすべてのオリジンを許可します(`allow_origins=["*"]`)
+- フロントエンドの開発サーバーが別ポートで動く場合に便利です
 
-**Production:**
-- Restrict to specific origins only
-- Example: `allow_origins=["https://yourdomain.com"]`
-- Never use wildcard (*) in production
-- Configure based on deployment environment
+**本番環境:**
+- 特定のオリジンのみに制限します
+- 例: `allow_origins=["https://yourdomain.com"]`
+- 本番でワイルドカード(*)は絶対に使いません
+- デプロイ環境に応じて設定します
 
-### Testing API Endpoints
+### API endpoint のテスト
 
-**Using FastAPI Docs:**
-1. Start server
-2. Navigate to http://localhost:8001/docs
-3. Click endpoint to expand
-4. Click "Try it out"
-5. Fill in parameters
-6. Execute and verify response
+**FastAPI Docs を使う場合:**
+1. サーバーを起動する
+2. http://localhost:8001/docs を開く
+3. endpoint をクリックして展開する
+4. "Try it out" をクリックする
+5. パラメータを入力する
+6. 実行してレスポンスを確認する
 
-**Using pytest:**
+**pytest を使う場合:**
 ```python
 def test_endpoint(client):
     response = client.get("/api/endpoint?param=value")
@@ -184,38 +184,38 @@ def test_endpoint(client):
     assert len(data) > 0
 ```
 
-**What to Test:**
-- Successful requests return 200
-- Invalid IDs return 404
-- Filters work correctly
-- Response structure matches model
-- Calculations are accurate
-- Edge cases (empty results, invalid input)
+**テストすべき項目:**
+- 正常なリクエストが 200 を返すこと
+- 無効な ID が 404 を返すこと
+- フィルタが正しく機能すること
+- レスポンス構造がモデルと一致すること
+- 計算結果が正確であること
+- エッジケース(空の結果、不正な入力)
 
-### Performance Considerations
+### パフォーマンスに関する考慮事項
 
-**In-Memory Data:**
-- Fast reads (no database queries)
-- No indexing needed for demo
-- All filtering happens in Python
-- Reasonable for small datasets (<10K items)
+**インメモリデータ:**
+- 読み取りが高速です(データベースクエリなし)
+- デモ用途ではインデックスは不要です
+- フィルタリングはすべて Python 内で行います
+- 小規模なデータセット(1 万件未満)であれば十分実用的です
 
-**If Scaling:**
-- Add database (PostgreSQL, MongoDB)
-- Implement pagination
-- Add caching layer (Redis)
-- Use database indexes for common filters
-- Consider async database queries
+**スケールさせる場合:**
+- データベースを導入する(PostgreSQL, MongoDB)
+- ページネーションを実装する
+- キャッシュ層を追加する(Redis)
+- よく使うフィルタにはデータベースのインデックスを使う
+- 非同期のデータベースクエリを検討する
 
-### Code Organization
+### コードの整理
 
-**When to Extract:**
-- Filtering logic used in multiple endpoints → Extract to utility function
-- Complex business logic → Move to separate module
-- Data validation beyond Pydantic → Create custom validators
-- Repeated calculations → Extract to helper functions
+**切り出しの目安:**
+- 複数の endpoint で使うフィルタリングロジック → ユーティリティ関数に切り出す
+- 複雑なビジネスロジック → 別モジュールに移す
+- Pydantic では足りないデータ検証 → カスタムバリデータを作る
+- 繰り返し出てくる計算 → ヘルパー関数に切り出す
 
-**Module Structure for Growth:**
+**成長を見据えたモジュール構成:**
 ```
 server/
 ├── main.py           # API endpoints only
@@ -228,59 +228,59 @@ server/
 └── data/             # JSON data files
 ```
 
-### Common Pitfalls
+### よくある落とし穴
 
-**Avoid:**
-- ❌ Mutating global data (filter on copies)
-- ❌ Missing Pydantic model updates when JSON changes
-- ❌ Inconsistent filter parameter names across endpoints
-- ❌ Returning raw dict instead of Pydantic model
-- ❌ Not handling None/null values in data
+**避けるべきこと:**
+- ❌ グローバルなデータを直接変更する(コピーに対してフィルタすること)
+- ❌ JSON を変更したのに Pydantic モデルを更新し忘れる
+- ❌ endpoint ごとにフィルタパラメータ名がバラバラになる
+- ❌ Pydantic モデルではなく生の dict を返す
+- ❌ データ内の None/null 値を処理しない
 
-**Do:**
-- ✅ Validate all input with Pydantic
-- ✅ Return typed responses (response_model)
-- ✅ Handle optional parameters gracefully
-- ✅ Keep endpoints focused and simple
-- ✅ Write tests for new endpoints
+**推奨すること:**
+- ✅ すべての入力を Pydantic で検証する
+- ✅ 型付きのレスポンスを返す(response_model)
+- ✅ 省略可能なパラメータを適切に処理する
+- ✅ endpoint は目的を絞ってシンプルに保つ
+- ✅ 新しい endpoint にはテストを書く
 
-### Debugging
+### デバッグ
 
-**Techniques:**
-- Use FastAPI's automatic docs for quick testing
-- Print statements in endpoint functions (shows in terminal)
-- Check Pydantic validation errors in response
-- Use Python debugger (`import pdb; pdb.set_trace()`)
-- Review JSON data files for structure issues
+**テクニック:**
+- FastAPI の自動生成 docs を使ってさっと動作確認する
+- endpoint 関数内で print する(ターミナルに表示されます)
+- レスポンスに含まれる Pydantic の検証エラーを確認する
+- Python のデバッガを使う(`import pdb; pdb.set_trace()`)
+- JSON データファイルの構造に問題がないか確認する
 
-**Common Issues:**
-- Data not loading → Check JSON file path
-- Validation errors → Verify Pydantic model matches data
-- Empty results → Check filter logic and data
-- 404 errors → Verify route path and HTTP method
+**よくある問題:**
+- データが読み込まれない → JSON ファイルのパスを確認
+- 検証エラー → Pydantic モデルとデータが一致しているか確認
+- 結果が空になる → フィルタロジックとデータを確認
+- 404 エラー → route のパスと HTTP メソッドを確認
 
-### Security Notes
+### セキュリティに関する注意
 
-**For Production:**
-- Add authentication/authorization
-- Validate and sanitize all input
-- Use HTTPS only
-- Implement rate limiting
-- Add input size limits
-- Use environment variables for sensitive config
-- Never commit secrets to git
+**本番環境に向けて:**
+- 認証・認可を追加する
+- すべての入力を検証・サニタイズする
+- HTTPS のみを使う
+- レート制限を実装する
+- 入力サイズの上限を設ける
+- 機密性のある設定には環境変数を使う
+- シークレットを git にコミットしない
 
-**Current State:**
-- No authentication (demo only)
-- CORS allows all origins
-- No rate limiting
-- No input validation beyond types
-- Suitable for local development only
+**現在の状態:**
+- 認証なし(デモ用のため)
+- CORS はすべてのオリジンを許可
+- レート制限なし
+- 型以外の入力検証なし
+- ローカル開発でのみ使用可能な状態です
 
-## Quick Reference
+## クイックリファレンス
 
-**Start server:** `uv run python main.py`
+**サーバー起動:** `uv run python main.py`
 **API docs:** http://localhost:8001/docs
-**Run tests:** `cd ../tests && uv run pytest backend/ -v`
-**Add endpoint:** Define model → Add route → Write tests
-**Add filter:** Add query param → Check 'all' value → Filter data
+**テスト実行:** `cd ../tests && uv run pytest backend/ -v`
+**endpoint 追加:** モデルを定義 → route を追加 → テストを書く
+**フィルタ追加:** query パラメータを追加 → 'all' 値をチェック → データをフィルタ
