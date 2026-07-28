@@ -20,7 +20,7 @@ cd server && uv run python main.py
 cd client && npm install && npm run dev
 ```
 
-両方をまとめて起動する `scripts/start.sh` もあります。
+両方をまとめて起動する `scripts/start.sh` もある。
 
 ## API
 
@@ -34,7 +34,7 @@ cd client && npm install && npm run dev
 
 - フィルターシステム:4種のフィルター(期間、倉庫、カテゴリー、注文ステータス)をクエリパラメータで適用
 - データフロー:Vue のフィルター → `client/src/api.js` → FastAPI → インメモリでのフィルタリング → Pydantic → computed プロパティ
-- リアクティビティ:生データは ref に、派生データは computed に保持
+- リアクティビティ:生データは ref、派生データは computed に保持
 
 ## 引き継ぎ時点の既知の問題
 

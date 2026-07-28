@@ -108,7 +108,7 @@ uv run pytest --cov=../server --cov-report=html
 
 ## テストの特徴
 
-- **FastAPI TestClient**: FastAPI 組み込みのテストクライアントを使い、高速かつ独立したテストを実現しています
+- **FastAPI TestClient**: FastAPI 組み込みのテストクライアントを使った、高速で独立性の高いテストです
 - **Fixture**: 再利用可能な fixture を `conftest.py` にまとめています
 - **包括的な検証**: データ構造、型、計算結果、ビジネスロジックまで確認します
 - **フィルターのテスト**: すべてのフィルターの組み合わせとエッジケースを検証します

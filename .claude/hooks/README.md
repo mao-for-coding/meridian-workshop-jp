@@ -25,7 +25,7 @@
 
 **特徴**:
 - タイムスタンプつきの日次ログファイルを作成します
-- `jq` できれいに JSON をパースします(jq がなければ生ログにフォールバック)
+- JSON のパースには `jq` を使います(jq がなければ生ログにフォールバック)
 - ツール名、セッション ID、入力パラメータ、レスポンスを記録します
 - ツールの実行を妨げることはありません
 
@@ -58,7 +58,7 @@ grep "ツール: Bash" .claude/logs/*.log
 
 ## フックの無効化
 
-フックを一時的に無効化するには、次のいずれかの方法があります:
+フックを一時的に無効化する方法は次の 3 つです:
 
 1. **設定から外す**: `.claude/settings.local.json` を編集してフックの設定を削除する
 2. **実行権限を外す**: `chmod -x .claude/hooks/post-tool-use.sh`
@@ -66,7 +66,7 @@ grep "ツール: Bash" .claude/logs/*.log
 
 ## カスタムフックの作成
 
-カスタムフックの作り方については、[Claude Code フックのドキュメント](https://docs.claude.com/en/docs/claude-code/hooks.md)を参照してください。
+カスタムフックの作り方は、[Claude Code フックのドキュメント](https://docs.claude.com/en/docs/claude-code/hooks.md)を参照してください。
 
 ### 利用可能なフックイベント:
 - `PreToolUse` - ツール実行の前
