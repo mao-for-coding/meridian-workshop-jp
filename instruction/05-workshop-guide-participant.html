@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>参加者用ガイドブック — Claude Code ワークショップ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0f172a; --ink-2:#1e293b; --muted:#64748b; --muted-2:#94a3b8;
+  --line:#e2e8f0; --bg:#f8fafc; --white:#fff;
+  --green:#16a34a; --blue:#2563eb; --amber:#d97706; --red:#dc2626; --purple:#7c3aed;
+  --sans:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --mono:"Roboto Mono","SF Mono",Consolas,"Noto Sans JP","Hiragino Kaku Gothic ProN",monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);line-height:1.8;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1000px;margin:0 auto;padding:0 32px 110px}
+
+header{background:var(--blue);color:#fff;padding:54px 0 44px;margin-bottom:40px;
+  background-image:linear-gradient(135deg,#1d4ed8 0%,#2563eb 55%,#3b82f6 100%)}
+header .wrap{padding-bottom:0}
+.kicker{font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.18em;color:rgba(255,255,255,.72);text-transform:uppercase;margin-bottom:15px;display:flex;align-items:center;gap:12px}
+.kicker .bar{width:30px;height:2px;background:currentColor}
+header h1{font-size:38px;font-weight:900;letter-spacing:-.02em;line-height:1.28}
+header p.sub{font-size:16.5px;color:rgba(255,255,255,.92);margin-top:14px;max-width:760px}
+.hmeta{display:flex;flex-wrap:wrap;gap:32px;margin-top:30px;padding-top:22px;border-top:1px solid rgba(255,255,255,.28)}
+.hmeta div .k{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:rgba(255,255,255,.66);text-transform:uppercase;margin-bottom:4px}
+.hmeta div .v{font-size:14.5px;font-weight:600}
+
+nav.toc{background:var(--white);border:1px solid var(--line);border-left:3px solid var(--blue);padding:22px 26px;margin-bottom:46px}
+nav.toc .t{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.14em;color:var(--muted);margin-bottom:13px}
+nav.toc ol{list-style:none;columns:2;column-gap:40px}
+nav.toc li{margin-bottom:7px;font-size:14px;break-inside:avoid}
+nav.toc a{text-decoration:none;color:var(--ink-2)}
+nav.toc a:hover{color:var(--blue);text-decoration:underline}
+nav.toc .g{font-family:var(--mono);font-size:10px;color:var(--muted-2);letter-spacing:.1em;margin:13px 0 7px;break-after:avoid}
+
+section{margin-bottom:54px;scroll-margin-top:20px}
+h2{font-size:25px;font-weight:700;letter-spacing:-.01em;margin-bottom:8px;padding-bottom:13px;border-bottom:3px solid var(--blue);display:flex;align-items:baseline;gap:13px}
+h2 .num{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--muted-2)}
+h3{font-size:17.5px;font-weight:700;margin:28px 0 12px}
+h4{font-size:14.5px;font-weight:700;margin:18px 0 8px;color:var(--ink-2)}
+p{margin-bottom:14px;color:var(--ink-2)}
+.lead{font-size:16.5px;color:var(--ink-2);margin:16px 0 22px}
+code{font-family:var(--mono);font-size:.87em;background:#eef2f7;padding:2px 6px;border-radius:3px}
+kbd{font-family:var(--mono);font-size:.82em;background:var(--white);border:1px solid var(--muted-2);border-bottom-width:2px;border-radius:4px;padding:2px 7px;font-weight:700;color:var(--ink)}
+strong{font-weight:700;color:var(--ink)}
+
+table{width:100%;border-collapse:collapse;background:var(--white);margin:18px 0;font-size:13.8px}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--muted);background:#f1f5f9;border-bottom:2px solid var(--ink);white-space:nowrap}
+td.mono{font-family:var(--mono)}
+tbody tr:last-child td{border-bottom:none}
+
+.chip{display:inline-block;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.06em;padding:3px 8px;border-radius:2px;white-space:nowrap}
+.chip.g{background:#dcfce7;color:#15803d}
+.chip.b{background:#dbeafe;color:#1d4ed8}
+.chip.a{background:#fef3c7;color:#b45309}
+.chip.r{background:#fee2e2;color:#b91c1c}
+.chip.n{background:#e2e8f0;color:#475569}
+.chip.p{background:#ede9fe;color:#6d28d9}
+
+.box{background:var(--white);border:1px solid var(--line);border-left:3px solid var(--muted);padding:19px 23px;margin:20px 0}
+.box .h{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.12em;color:var(--muted);margin-bottom:9px}
+.box p:last-child{margin-bottom:0}
+.box.b{border-left-color:var(--blue)} .box.b .h{color:var(--blue)}
+.box.g{border-left-color:var(--green)} .box.g .h{color:var(--green)}
+.box.a{border-left-color:var(--amber)} .box.a .h{color:var(--amber)}
+.box.r{border-left-color:var(--red)} .box.r .h{color:var(--red)}
+.box.p{border-left-color:var(--purple)} .box.p .h{color:var(--purple)}
+
+/* session card */
+.ses{background:var(--white);border:1px solid var(--line);border-top:3px solid var(--blue);margin:24px 0}
+.ses>.hd{padding:15px 22px;border-bottom:1px solid var(--line);background:#f8fafc;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+.ses>.hd .ttl{font-size:16.5px;font-weight:700}
+.ses>.hd .ttl span{display:block;font-family:var(--mono);font-size:10px;color:var(--muted-2);letter-spacing:.1em;font-weight:400;margin-bottom:2px}
+.ses>.hd .tm{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--blue);background:#dbeafe;padding:4px 10px;border-radius:2px;white-space:nowrap}
+.ses>.bd{padding:20px 22px}
+.ses>.bd>h4:first-child{margin-top:0}
+
+.goal{background:#eff6ff;border:1px solid #bfdbfe;padding:14px 18px;margin:0 0 18px;font-size:14.5px;color:#1e3a8a}
+.goal b{color:#1d4ed8}
+
+/* do list */
+ol.do{counter-reset:d;list-style:none;margin:12px 0}
+ol.do li{counter-increment:d;background:var(--bg);border:1px solid var(--line);padding:13px 16px 13px 50px;position:relative;margin-bottom:7px;font-size:14px}
+ol.do li::before{content:counter(d);position:absolute;left:0;top:0;bottom:0;width:36px;display:flex;align-items:center;justify-content:center;background:#e0e7ff;border-right:1px solid var(--line);font-family:var(--mono);font-size:12px;font-weight:700;color:var(--blue)}
+
+/* type-this */
+.type{background:var(--ink);color:#e2e8f0;font-family:var(--mono);font-size:13.5px;padding:14px 18px;margin:12px 0;border-radius:3px;overflow-x:auto;white-space:pre-wrap;line-height:1.7}
+.type .c{color:#94a3b8}
+
+/* remember */
+ul.rem{list-style:none;margin:12px 0}
+ul.rem li{padding-left:28px;position:relative;margin-bottom:11px;font-size:14.3px;color:var(--ink-2)}
+ul.rem li::before{content:"★";position:absolute;left:0;top:0;color:var(--amber);font-weight:700}
+ul.rem li b{color:var(--ink)}
+
+/* checklist */
+ul.chk{list-style:none;margin:12px 0}
+ul.chk li{padding-left:28px;position:relative;margin-bottom:8px;font-size:14px;color:var(--ink-2)}
+ul.chk li::before{content:"☐";position:absolute;left:0;top:-1px;color:var(--blue);font-weight:700;font-size:15px}
+
+ul.plain{list-style:none;margin:12px 0}
+ul.plain li{padding-left:21px;position:relative;margin-bottom:9px;font-size:14px;color:var(--ink-2)}
+ul.plain li::before{content:"▸";position:absolute;left:0;color:var(--muted-2);font-weight:700}
+
+footer{border-top:1px solid var(--line);margin-top:62px;padding-top:26px;font-family:var(--mono);font-size:11.5px;color:var(--muted-2);line-height:2}
+footer a{color:var(--blue)}
+
+@media print{body{background:#fff}header{background:var(--blue)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}section{page-break-inside:avoid}nav.toc{display:none}}
+@media (max-width:820px){.wrap{padding:0 20px 60px}header h1{font-size:28px}nav.toc ol{columns:1}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="kicker"><span class="bar"></span>PARTICIPANT GUIDEBOOK</div>
+    <h1>Claude Code ワークショップ<br>参加者用ガイドブック</h1>
+    <p class="sub">セッションごとに「今なにをするか」「なにを覚えて帰るか」をまとめたものです。手元に開いたまま進めてください。</p>
+    <div class="hmeta">
+      <div><div class="k">所要</div><div class="v">約 2 時間（休憩30分を含む）</div></div>
+      <div><div class="k">題材</div><div class="v">Meridian Components 在庫ダッシュボード案件</div></div>
+      <div><div class="k">前提知識</div><div class="v">不要（エンジニアでなくても参加できます）</div></div>
+      <div><div class="k">対になる資料</div><div class="v">講師用ガイドブック</div></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<div class="box r" style="margin-top:0">
+  <div class="h">はじめにお読みください</div>
+  <p><strong>この資料に「答え」は書いてありません。</strong>課題のコードにはいくつか不具合が仕込まれていますが、それが何かは意図的に書いていません。自分で見つける体験がこのワークショップの中心です。</p>
+  <p>書いてあるのは<strong>「どう探すか」</strong>と<strong>「なにを覚えて帰るか」</strong>です。</p>
+</div>
+
+<nav class="toc">
+  <div class="t">目次</div>
+  <ol>
+    <li class="g">準備</li>
+    <li><a href="#s0">00 — このワークショップの狙い</a></li>
+    <li><a href="#s1">01 — 始める前に</a></li>
+    <li class="g">課題1（前半）</li>
+    <li><a href="#a1">02 — Session 1-1 状況をつかむ</a></li>
+    <li><a href="#a2">03 — Session 1-2 課題文を読む</a></li>
+    <li><a href="#a3">04 — Session 1-3 提案書をつくる</a></li>
+    <li><a href="#a4">05 — Session 1-4 成果物を直す</a></li>
+    <li class="g">課題2（後半）</li>
+    <li><a href="#b1">06 — Session 2-1 方向性を決める</a></li>
+    <li><a href="#b2">07 — Session 2-2 実装を観察する</a></li>
+    <li><a href="#b3">08 — Session 2-3 報告書を書かせる</a></li>
+    <li><a href="#b4">09 — Session 2-4 観測を語る</a></li>
+    <li class="g">まとめと参考</li>
+    <li><a href="#c1">10 — 持ち帰るもの</a></li>
+    <li><a href="#c2">11 — チートシート</a></li>
+    <li><a href="#c3">12 — 詰まったときは</a></li>
+    <li><a href="#c4">13 — 自己チェックリスト</a></li>
+  </ol>
+</nav>
+
+<!-- ===================== 00 ===================== -->
+<section id="s0">
+  <h2><span class="num">00</span>このワークショップの狙い</h2>
+
+  <p class="lead">あなたは<strong>コンサルタント</strong>です。クライアントから提案依頼書（RFP）が届きました。まず提案書を書いて受注し、次に実際のシステムを直します。Claude Code はその相棒です。</p>
+
+  <table>
+    <thead><tr><th style="width:16%">課題</th><th style="width:26%">やること</th><th>身につくこと</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>課題1</strong><br><span class="chip n">前半</span></td>
+        <td>RFP を読み、提案書とプレゼン資料をつくる</td>
+        <td>読解・調査・文書作成を任せる進め方。<strong>コードを書かない使い方</strong></td>
+      </tr>
+      <tr>
+        <td><strong>課題2</strong><br><span class="chip n">後半</span></td>
+        <td>受注した案件として、実際のコードを直して機能を追加する</td>
+        <td>既存システムの把握、不具合の調査、テストの整備、新機能の実装</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="box b">
+    <div class="h">このワークショップで一番大事な考え方</div>
+    <p><strong>Claude が出すものは「初稿」です。完成品ではありません。</strong></p>
+    <p>あなたの仕事は、出てきたものを読んで<strong>「ここを直して」と言うこと</strong>です。全部おまかせにすると、それはあなたの成果物になりません。遠慮なく差し戻してください。作り直しは数十秒で終わります。</p>
+  </div>
+
+  <div class="box a">
+    <div class="h">エンジニアでない方へ</div>
+    <p>課題1はコードを一切書きません。課題2でコードが登場しますが、<strong>あなたが書く必要はありません</strong>。「何をしたいか」を日本語で伝え、出てきたものを判断する役です。技術用語が出てきたら「それは何？」と聞いてください。説明するのも相棒の仕事です。</p>
+  </div>
+</section>
+
+<!-- ===================== 01 ===================== -->
+<section id="s1">
+  <h2><span class="num">01</span>始める前に</h2>
+
+  <h3>あなたにしかできない操作があります</h3>
+  <p>Claude が代行できない操作があります。「入力してください」と言われたら、<strong>あなた自身がキーボードを叩いてください</strong>。ここが最初のつまずきポイントです。</p>
+
+  <table>
+    <thead><tr><th style="width:26%">操作</th><th style="width:22%">なにをする</th><th>いつ使う</th></tr></thead>
+    <tbody>
+      <tr><td><code>/</code> で始まるコマンド</td><td>プロンプトに直接入力</td><td><code>/start</code>（アプリ起動）、<code>/mcp</code>（接続確認）など</td></tr>
+      <tr><td><kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>2回押すとモードが変わる</td><td>Plan Mode に入るとき（後半で使います）</td></tr>
+      <tr><td><kbd>@</kbd></td><td>ファイルを会話に引き込む</td><td>資料を読ませるとき。候補が出るので選ぶだけ</td></tr>
+      <tr><td><kbd>!</kbd></td><td>コマンドを自分で実行</td><td>ログインなど自分の手で実行したいとき</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box a">
+    <div class="h">覚えておくと得な感覚</div>
+    <p>「Claude にやらせること」と「自分がやること」の境目は、<strong>権限と責任が絡むかどうか</strong>でだいたい決まります。モードの切り替え、ブラウザでのログイン、コマンドの実行許可は自分側です。</p>
+  </div>
+
+  <h3>環境の確認（講師の指示があれば）</h3>
+  <p>後半でアプリを動かします。必要なツールが揃っているか、最初に確認します。以下は<strong>講師または Claude が案内します</strong>ので、覚える必要はありません。ただ「動かす前に前提を確認する」という順序だけ意識しておいてください。</p>
+  <div class="type">python3 -V; uv --version; node -v; npm -v</div>
+</section>
+
+<!-- ===================== 課題1 / 1-1 ===================== -->
+<section id="a1">
+  <h2><span class="num">02</span>Session 1-1 — 状況をつかむ</h2>
+
+  <div class="ses">
+    <div class="hd">
+      <div class="ttl"><span>SESSION 1-1</span>課題全体紹介</div>
+      <div class="tm">5分</div>
+    </div>
+    <div class="bd">
+      <div class="goal"><b>このセッションのゴール：</b>自分の役割（コンサルタント）と締切を理解し、最初のファイル参照を自分の手で実行する。</div>
+
+      <h4>あなたがやること</h4>
+      <ol class="do">
+        <li>講師の状況説明を聞く（クライアント名・案件・締切）</li>
+        <li>Claude から「一緒に読みましょう」と言われたら、<strong>自分で <kbd>@</kbd> を入力</strong>して RFP を開く</li>
+      </ol>
+
+      <h4>入力するもの</h4>
+      <div class="type"><span class="c"># @ を押すとファイル候補が出ます。docs/rfp/ あたりまで打って選んでください</span>
+@docs/rfp/MC-2026-0417.md を一緒に読みましょう</div>
+
+      <h4>覚えるべきこと</h4>
+      <ul class="rem">
+        <li><b><kbd>@</kbd> でファイルを渡せる。</b>パスを暗記する必要はなく、候補から選べます。これが今日いちばん使う操作です</li>
+        <li><b>資料は「渡す」もの。</b>Claude は勝手にあなたのファイルを読んでいるわけではありません。渡したものを読みます</li>
+      </ul>
+
+      <div class="box b">
+        <div class="h">この5分でやらないこと</div>
+        <p>Claude Code の機能一覧を覚える必要はありません。<strong>仕事の話から始めます。</strong>機能は必要になった場面で1つずつ出てきます。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 1-2 ===================== -->
+<section id="a2">
+  <h2><span class="num">03</span>Session 1-2 — 課題文を読む</h2>
+
+  <div class="ses">
+    <div class="hd">
+      <div class="ttl"><span>SESSION 1-2</span>課題文の読解と Challenge / Cost の議論</div>
+      <div class="tm">10分</div>
+    </div>
+    <div class="bd">
+      <div class="goal"><b>このセッションのゴール：</b>RFP の要求を整理し、<b>書かれていないこと（穴）</b>を見つける。人手でやったらどれくらいかかるかを想像する。</div>
+
+      <h4>あなたがやること</h4>
+      <ol class="do">
+        <li>要約を読み、必須項目と希望項目を把握する</li>
+        <li><strong>「この情報だけで見積もれるか？」</strong>と自問する。足りないものを探す</li>
+        <li>補足資料（クライアント背景・前任ベンダーの引き継ぎ資料）も読ませる</li>
+        <li>確認事項の質問が提示されたら、<strong>クライアント役として自分で答える</strong></li>
+      </ol>
+
+      <h4>探し方 — 穴を見つけるための問い</h4>
+      <ul class="plain">
+        <li><strong>数量が書かれているか。</strong>「複数の問題」「いくつかの改善」のような曖昧な表現はないか</li>
+        <li><strong>基準が書かれているか。</strong>「モダンに」「使いやすく」は、誰が何をもって判断するのか</li>
+        <li><strong>予算が書かれているか。</strong>書かれていないなら、規模をどう決めるのか</li>
+        <li><strong>範囲の境界が書かれているか。</strong>どこまでやれば完了なのか</li>
+      </ul>
+
+      <div class="box b">
+        <div class="h">ここが今日の分かれ道です</div>
+        <p>RFP には<strong>意図的に曖昧な箇所があります</strong>。それを「クライアントに確認したいこと」として言語化できるかどうかが、このセッションの到達度です。</p>
+        <p>見つけた穴は、あとで質問リストになり、その回答が提案書の<strong>前提条件</strong>になります。ここで手を抜くと、後半まで影響します。</p>
+      </div>
+
+      <h4>人手でやった場合を想像する</h4>
+      <p>議論のために、次を頭の中で見積もってみてください。答え合わせは後半でします。</p>
+      <table>
+        <thead><tr><th style="width:56%">作業</th><th>あなたの見積もり</th></tr></thead>
+        <tbody>
+          <tr><td>RFP と補足資料3点を読んで要点を整理する</td><td>_____ 時間</td></tr>
+          <tr><td>約9,000行のコードベースの現状を把握する</td><td>_____ 日</td></tr>
+          <tr><td>提案書一式（5セクション）の初稿を書く</td><td>_____ 日</td></tr>
+          <tr><td>プレゼン資料12枚をつくる</td><td>_____ 日</td></tr>
+        </tbody>
+      </table>
+
+      <h4>覚えるべきこと</h4>
+      <ul class="rem">
+        <li><b>質問を作らせることができる。</b>「確認すべきことを整理して」と頼めば、曖昧な箇所を洗い出してくれます。レビューの相棒として使えます</li>
+        <li><b>あなたの回答が前提条件になる。</b>質問に答えると、それが文書に反映されます。<b>判断はあなたがする</b>という構図を体感してください</li>
+        <li><b>選択肢を提示させると考えやすい。</b>「どうしますか」より「選択肢を出して」のほうが判断しやすくなります</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 1-3 ===================== -->
+<section id="a3">
+  <h2><span class="num">04</span>Session 1-3 — 提案書をつくる</h2>
+
+  <div class="ses">
+    <div class="hd">
+      <div class="ttl"><span>SESSION 1-3</span>Step-by-Step で RFP 解答案を作成</div>
+      <div class="tm">20分</div>
+    </div>
+    <div class="bd">
+      <div class="goal"><b>このセッションのゴール：</b>1セクションずつ作り、<b>都度直す</b>というリズムを体験する。</div>
+
+      <h4>進む順序</h4>
+      <ol class="do">
+        <li>エグゼクティブサマリー（1ページ）</li>
+        <li>技術アプローチ（各要件への対応方針）</li>
+        <li>スケジュール（フェーズ分け）</li>
+        <li>価格（前提条件つき）</li>
+        <li>プレゼン資料（10〜15枚の HTML）</li>
+      </ol>
+
+      <div class="box r">
+        <div class="h">ここが今日いちばん重要なルールです</div>
+        <p><strong>各セクションが出てきたら、必ず1箇所は直してください。</strong></p>
+        <p>「これでいいです」と流すのは簡単ですが、それでは<strong>作り替えの速さ</strong>という最大の体験を逃します。前回のワークショップでは修正が一度も発生せず、この学びが得られませんでした。</p>
+        <p>直すところが思いつかないときは、下の「言い方の例」を使ってください。</p>
+      </div>
+
+      <h4>直すときの言い方の例</h4>
+      <table>
+        <thead><tr><th style="width:22%">直したい方向</th><th>そのまま使える言い方</th></tr></thead>
+        <tbody>
+          <tr><td>トーン</td><td>「もっと硬い日本語のビジネス文書にして」／「もっと率直に、断定的に」</td></tr>
+          <tr><td>長さ</td><td>「半分の長さにして」／「この節だけ厚くして」</td></tr>
+          <tr><td>力点</td><td>「価格より納期の確実性を前面に出して」</td></tr>
+          <tr><td>削除</td><td>「この段落は他社批判に読まれそうなので削って」</td></tr>
+          <tr><td>追加</td><td>「リスクと対応策の表を足して」</td></tr>
+          <tr><td>見た目（資料）</td><td>「ダークテーマにして」／「枚数を10枚に減らして」／「順番を入れ替えて」</td></tr>
+        </tbody>
+      </table>
+
+      <h4>途中で提案されるかもしれない機能</h4>
+      <table>
+        <thead><tr><th style="width:24%">機能</th><th style="width:20%">誰が操作</th><th>意味</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Plan Mode</strong></td><td><span class="chip b">あなた</span> <kbd>Shift</kbd>+<kbd>Tab</kbd> ×2</td><td>いきなり書き始めるのを止めて、<strong>方針だけ先に出させる</strong>モード。合意してから実装に入れます</td></tr>
+          <tr><td>コードを覗く</td><td>Claude</td><td>見積もり精度を上げるため、実物を確認します。<strong>資料の記述と実物が違うことがあります</strong></td></tr>
+        </tbody>
+      </table>
+
+      <div class="box a">
+        <div class="h">Plan Mode は一度は入ってみてください</div>
+        <p>提案されたらスキップせず、1回は体験することをおすすめします。<strong>長い成果物や、方向を間違えると手戻りが大きい作業</strong>で効きます。前回は3回提案されて3回スキップされ、この体験が未達でした。</p>
+      </div>
+
+      <h4>覚えるべきこと</h4>
+      <ul class="rem">
+        <li><b>1セクションずつ、都度直す。</b>まとめて全部作らせるより速く、望んだものに近づきます</li>
+        <li><b>資料に書かれていることを鵜呑みにしない。</b>実物を確認すると違うことがあります。「実際はどうなっているか確認して」と頼めます</li>
+        <li><b>Plan Mode は「書く前に相談する」ためのもの。</b>入るのはあなた。<kbd>Shift</kbd>+<kbd>Tab</kbd> を2回</li>
+        <li><b>HTML の資料は作り直しが速い。</b>色・順番・枚数の変更は数十秒です。遠慮する必要がありません</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 1-4 ===================== -->
+<section id="a4">
+  <h2><span class="num">05</span>Session 1-4 — 成果物を直す</h2>
+
+  <div class="ses">
+    <div class="hd">
+      <div class="ttl"><span>SESSION 1-4</span>出来上がった解答案を読んで感想を語る</div>
+      <div class="tm">10分</div>
+    </div>
+    <div class="bd">
+      <div class="goal"><b>このセッションのゴール：</b>生成物を<b>自分の目で評価</b>する。使えるか、直すべきか、足りないものは何かを判断する。</div>
+
+      <h4>あなたがやること</h4>
+      <ol class="do">
+        <li>ブラウザで資料を開く（開き方は講師が案内します）</li>
+        <li>全ページに目を通す</li>
+        <li><strong>少なくとも1箇所、直す指示を出す</strong></li>
+        <li>直った結果を確認する</li>
+      </ol>
+
+      <h4>読むときの観点</h4>
+      <ul class="plain">
+        <li><strong>これで受注できると思うか。</strong>足りないものは何か</li>
+        <li><strong>言い過ぎ・攻めすぎの箇所はないか。</strong>他社批判に読まれる表現はないか</li>
+        <li><strong>前提条件が硬すぎないか。</strong>「組みにくい相手」に見えないか</li>
+        <li><strong>自分の会社の情報が必要な箇所はどこか。</strong>そこは AI に任せられない部分です</li>
+      </ul>
+
+      <div class="box g">
+        <div class="h">ここで気づいてほしいこと</div>
+        <p>提案書の中で<strong>AI に埋められない項目</strong>があります。自社の実績、顧客の連絡先、社名。<strong>「どこが任せられないか」を知ることは、「何を任せられるか」を知ることと同じくらい重要です。</strong></p>
+      </div>
+
+      <h4>覚えるべきこと</h4>
+      <ul class="rem">
+        <li><b>読んで判断するのがあなたの仕事。</b>生成できることと、使えることは別です</li>
+        <li><b>任せられない部分を見極める。</b>事実・実績・連絡先など、検証できない情報は自分で埋めます</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 休憩 ===================== -->
+<section>
+  <div class="box p">
+    <div class="h">休憩（30分）</div>
+    <p>ここまでが課題1です。提案書が完成し、<strong>受注が決まった</strong>という設定で後半に入ります。後半は実際のコードに手を入れます。</p>
+    <p>休憩中にやっておくと良いこと：<strong>後半で使う画面をブラウザで開けるか確認</strong>しておくとスムーズです。</p>
+  </div>
+</section>
+
+<!-- ===================== 2-1 ===================== -->
+<section id="b1">
+  <h2><span class="num">06</span>Session 2-1 — 方向性を決める</h2>
+
+  <div class="ses">
+    <div class="hd">
+      <div class="ttl"><span>SESSION 2-1</span>Manual Mode で実装方向性を議論。Plan Mode も活用</div>
+      <div class="tm">10分</div>
+    </div>
+    <div class="bd">
+      <div class="goal"><b>このセッションのゴール：</b>いきなり書かせず、<b>方針の合意を先に取る</b>という進め方を体験する。</div>
+
+      <h4>あなたがやること</h4>
+      <ol class="do">
+        <li>アプリを起動する。<strong><code>/start</code> と入力</strong>（あなたが入力します）</li>
+        <li>ブラウザで画面を開き、<strong>あちこちクリックしてみる</strong>。おかしいところを探す</li>
+        <li>どの要件から着手するか決める（推奨は提示されますが、決めるのはあなた）</li>
+        <li><strong><kbd>Shift</kbd>+<kbd>Tab</kbd> を2回押して Plan Mode に入る</strong>。方針だけ出させて合意する</li>
+      </ol>
+
+      <h4>入力するもの</h4>
+      <div class="type"><span class="c"># 1. アプリ起動（スラッシュコマンド）</span>
+/start
+
+<span class="c"># 2. Plan Mode に入ってから、方針を出させる</span>
+<span class="c">#    （Shift+Tab を2回押してから入力）</span>
+この要件の実装計画を立ててください</div>
+
+      <h4>画面を触るときの観点</h4>
+      <p>不具合が仕込まれています。何が仕込まれているかは書きませんが、<strong>探し方</strong>を書きます。</p>
+      <ul class="plain">
+        <li><strong>操作しても何も起きない</strong>ものはないか（ボタン、フィルター、絞り込み）</li>
+        <li><strong>表示が他の画面とちがう</strong>ところはないか（言語、通貨、書式）</li>
+        <li><strong>数字が噛み合わない</strong>ところはないか（画面Aの合計と画面Bの合計）</li>
+        <li>ブラウザの<strong>開発者ツールのコンソール</strong>にエラーが出ていないか（開き方は講師が案内します）</li>
+      </ul>
+
+      <div class="box b">
+        <div class="h">スラッシュコマンドとは</div>
+        <p>プロジェクトごとに定義できるショートカットです。このリポジトリには <code>/start</code>（サーバー起動）、<code>/stop</code>（停止）、<code>/test</code>（テスト実行）などが用意されています。<strong>Claude が代行するものではなく、あなたが入力するものです。</strong></p>
+      </div>
+
+      <div class="box a">
+        <div class="h">Plan Mode の使いどころ</div>
+        <p>Plan Mode 中は Claude はファイルを変更できません。<strong>計画だけを出します。</strong>読んで、違うと思ったら計画段階で直せます。実装が終わってから直すより圧倒的に安く済みます。</p>
+        <p>抜けるには <kbd>Shift</kbd>+<kbd>Tab</kbd> を押します。</p>
+      </div>
+
+      <h4>覚えるべきこと</h4>
+      <ul class="rem">
+        <li><b><code>/start</code> のようなスラッシュコマンドは自分で入力する。</b>プロジェクトに定義されたショートカットです</li>
+        <li><b>大きい作業の前は Plan Mode。</b>方針を先に合意すると手戻りが減ります</li>
+        <li><b>実装前に合意を取る価値。</b>とくに計算ロジックや業務判断が絡むものは、先に「どう計算するか」を決めてから作らせます</li>
+        <li><b>自分の目で画面を触る。</b>コードを読む前に、利用者として何がおかしいかを見ておくと判断が速くなります</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 2-2 ===================== -->
+<section id="b2">
+  <h2><span class="num">07</span>Session 2-2 — 実装を観察する</h2>
+
+  <div class="ses">
+    <div class="hd">
+      <div class="ttl"><span>SESSION 2-2</span>Auto Mode に切り替えて自動的に進めてもらう</div>
+      <div class="tm">25分（区切りで止めます）</div>
+    </div>
+    <div class="bd">
+      <div class="goal"><b>このセッションのゴール：</b>連続した自動作業を<b>観察</b>し、どこで人が介入すべきかの感覚をつかむ。</div>
+
+      <h4>あなたがやること</h4>
+      <ol class="do">
+        <li>Auto Mode に切り替える（講師が案内します）</li>
+        <li><strong>手を止めて観察する。</strong>ここは見る時間です</li>
+        <li>気づいたことを<strong>メモする</strong>（下の観察シートを使ってください）</li>
+        <li>おかしいと思ったら遠慮なく止めて質問する</li>
+      </ol>
+
+      <div class="box r">
+        <div class="h">全部終わるまで待つ必要はありません</div>
+        <p>実装をすべて終えるには時間がかかります。<strong>大きい実装が1つ終わった時点で止めて構いません。</strong>止めるタイミングは講師が判断します。観察と議論のほうが大事です。</p>
+      </div>
+
+      <h4>観察シート（メモしてください）</h4>
+      <table>
+        <thead><tr><th style="width:34%">観点</th><th>気づいたこと</th></tr></thead>
+        <tbody>
+          <tr><td><strong>順番</strong><br>何から手をつけたか。なぜその順か</td><td>&nbsp;</td></tr>
+          <tr><td><strong>調べ方</strong><br>どうやって原因を特定したか</td><td>&nbsp;</td></tr>
+          <tr><td><strong>間違い</strong><br>どこで失敗したか。どう立て直したか</td><td>&nbsp;</td></tr>
+          <tr><td><strong>意外だったこと</strong><br>想定と違った発見</td><td>&nbsp;</td></tr>
+          <tr><td><strong>確認してきたこと</strong><br>勝手に決めず、あなたに聞いてきたのは何か</td><td>&nbsp;</td></tr>
+        </tbody>
+      </table>
+
+      <h4>観察のヒント</h4>
+      <ul class="plain">
+        <li><strong>症状から入ったか、原因から入ったか。</strong>不具合を1つずつ潰したのか、まとめて解ける根っこを探したのか</li>
+        <li><strong>テストをいつ作ったか。</strong>直す前か、直した後か。それによって何が変わるか</li>
+        <li><strong>間違いをどう発見したか。</strong>自分で気づいたのか、テストが教えたのか</li>
+        <li><strong>どこで手を止めて聞いてきたか。</strong>「これは私が決めるべきでない」と判断した箇所はどこか</li>
+      </ul>
+
+      <div class="box g">
+        <div class="h">Claude は間違えます。それを見るのも目的です</div>
+        <p>失敗は隠されません。前回は9件の間違いがありました。<strong>大事なのは「間違えたか」ではなく「どう気づいて、どう直したか」です。</strong>その仕組みを見てください。</p>
+      </div>
+
+      <h4>覚えるべきこと</h4>
+      <ul class="rem">
+        <li><b>安全網を先に作ると、その後が速い。</b>テストを先に整えておくと、大きな書き換えも「壊していない」と確認しながら進められます</li>
+        <li><b>症状ではなく原因の連鎖を探す。</b>「不具合8件」が実は1つの原因だった、ということが起こります</li>
+        <li><b>実測してから判断する。</b>資料の記述ではなく、動かした結果・実際のデータで判断します</li>
+        <li><b>任せる範囲に線を引く。</b>業務判断が必要なものは実装させず、選択肢を出させて自分が決めます</li>
+        <li><b>止めるのはあなたの判断。</b>全部終わるまで放置しない。区切って確認するほうが安全です</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 2-3 ===================== -->
+<section id="b3">
+  <h2><span class="num">08</span>Session 2-3 — 報告書を書かせる</h2>
+
+  <div class="ses">
+    <div class="hd">
+      <div class="ttl"><span>SESSION 2-3</span>Project の進捗報告を書いてもらう</div>
+      <div class="tm">5分</div>
+    </div>
+    <div class="bd">
+      <div class="goal"><b>このセッションのゴール：</b>実装だけでなく<b>報告の作成まで</b>任せられることを知る。</div>
+
+      <h4>入力するもの</h4>
+      <div class="type">ここまでの進捗報告書を書いてください（HTML で）</div>
+
+      <h4>出てきた報告書を見る観点</h4>
+      <ul class="plain">
+        <li><strong>作業ログの羅列になっていないか。</strong>「何をしたか」だけでは報告として弱いです</li>
+        <li><strong>判断が必要な事項が整理されているか。</strong>「誰が何を決める必要があるか」が書かれているか</li>
+        <li><strong>数字に根拠があるか。</strong>実測値か、それとも推測か</li>
+        <li><strong>都合の悪いことが書かれているか。</strong>できなかったこと、間違えたことが隠されていないか</li>
+      </ul>
+
+      <div class="box b">
+        <div class="h">実務でいちばん効く使い方かもしれません</div>
+        <p>週次報告、月次報告、ステアリングコミッティ資料。<strong>「作業内容は分かっているが、まとめる時間がない」</strong>という場面は多いはずです。実測値にもとづく報告を数分で作れることの価値を、ここで測ってみてください。</p>
+      </div>
+
+      <h4>覚えるべきこと</h4>
+      <ul class="rem">
+        <li><b>報告書も成果物として頼める。</b>形式（HTML / Markdown / スライド）も指定できます</li>
+        <li><b>良い報告書には「未決事項」がある。</b>成果の羅列より、判断待ちの整理のほうが読み手に役立ちます</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 2-4 ===================== -->
+<section id="b4">
+  <h2><span class="num">09</span>Session 2-4 — 観測を語る</h2>
+
+  <div class="ses">
+    <div class="hd">
+      <div class="ttl"><span>SESSION 2-4</span>観測した内容について議論する</div>
+      <div class="tm">5分</div>
+    </div>
+    <div class="bd">
+      <div class="goal"><b>このセッションのゴール：</b>観察したことを<b>言葉にする</b>。他の参加者の観察と比べる。</div>
+
+      <h4>話す順番の目安</h4>
+      <ol class="do">
+        <li>何を実装したか（順番も）</li>
+        <li>どんな間違いをしたか</li>
+        <li>意外な発見はあったか</li>
+        <li>自分ならどこで止めたか、どこを自分でやったか</li>
+      </ol>
+
+      <div class="box a">
+        <div class="h">「うまくいった話」より「つまずいた話」を</div>
+        <p>成功例は資料を読めば分かります。<strong>つまずき方と立て直し方</strong>のほうが、明日からの実務に効きます。遠慮なく共有してください。</p>
+      </div>
+
+      <h4>覚えるべきこと</h4>
+      <ul class="rem">
+        <li><b>観察を言語化すると再現できる。</b>「なんとなく速かった」ではなく「テストを先に作ったから安心して書き換えられた」と言えると、自分の仕事に移せます</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 10 ===================== -->
+<section id="c1">
+  <h2><span class="num">10</span>持ち帰るもの</h2>
+
+  <p class="lead">今日の内容を、明日からの仕事に移すための対応表です。</p>
+
+  <table>
+    <thead><tr><th style="width:38%">今日やったこと</th><th>あなたの仕事で対応する場面</th></tr></thead>
+    <tbody>
+      <tr><td>RFP の穴を洗い出し、確認事項をドラフト</td><td>要件定義書・仕様書のレビュー。曖昧な記述の抽出と質問票づくり</td></tr>
+      <tr><td>既存コードから現状把握の資料を生成</td><td>引き継いだシステムのオンボーディング。資料が無い／古い場合の初期把握</td></tr>
+      <tr><td>資料と実物の突き合わせ</td><td>他社成果物の検収、デューデリジェンス、監査対応</td></tr>
+      <tr><td>テストを後付けで整備</td><td>テストが無くて変更が怖いシステムへの着手</td></tr>
+      <tr><td>実装前に計算方法を文書化して合意</td><td>業務ロジックを含む機能の設計。認識違いの事前防止</td></tr>
+      <tr><td>実測値にもとづく報告書の生成</td><td>週次・月次報告、経営層向け資料</td></tr>
+      <tr><td>手順を <code>CLAUDE.md</code> に書き残す</td><td>チームのオンボーディング資産づくり。同じ質問を二度させない</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box b">
+    <div class="h">最後に考えてほしい問い</div>
+    <p><strong>「今日の作業のうち、明日から実際に自分の仕事で試すものを1つ選んでください。」</strong></p>
+    <p>1つで十分です。抽象的な感想より、具体的な適用先を決めたほうが定着します。</p>
+  </div>
+</section>
+
+<!-- ===================== 11 ===================== -->
+<section id="c2">
+  <h2><span class="num">11</span>チートシート</h2>
+
+  <h3>あなたが入力する操作</h3>
+  <table>
+    <thead><tr><th style="width:24%">入力</th><th>意味</th></tr></thead>
+    <tbody>
+      <tr><td><kbd>@</kbd></td><td>ファイルを会話に引き込む。候補から選べる</td></tr>
+      <tr><td><kbd>Shift</kbd>+<kbd>Tab</kbd> ×2</td><td>Plan Mode に入る／抜ける。計画だけ出させたいとき</td></tr>
+      <tr><td><kbd>!</kbd></td><td>続けて書いたコマンドを自分で実行する</td></tr>
+      <tr><td><kbd>#</kbd></td><td>覚えておいてほしいことを記憶させる</td></tr>
+      <tr><td><code>/start</code> <code>/stop</code></td><td>アプリの起動・停止（このプロジェクト固有）</td></tr>
+      <tr><td><code>/test</code></td><td>テストを実行して報告させる（このプロジェクト固有）</td></tr>
+      <tr><td><code>/mcp</code></td><td>外部ツール接続の状態を確認する</td></tr>
+      <tr><td><code>/context</code></td><td>いま何がコンテキストに入っているか確認する</td></tr>
+      <tr><td><code>/compact</code></td><td>会話が長くなったとき、要約して軽くする</td></tr>
+      <tr><td><code>/model</code></td><td>使うモデルを切り替える</td></tr>
+    </tbody>
+  </table>
+
+  <h3>頼み方のパターン</h3>
+  <table>
+    <thead><tr><th style="width:30%">やりたいこと</th><th>言い方</th></tr></thead>
+    <tbody>
+      <tr><td>方針を先に見たい</td><td>Plan Mode に入ってから「計画を立てて」</td></tr>
+      <tr><td>選択肢が欲しい</td><td>「選択肢を3つ出して、それぞれの利点と欠点も」</td></tr>
+      <tr><td>資料を検証したい</td><td>「この資料の記述が実物と合っているか確認して」</td></tr>
+      <tr><td>直してほしい</td><td>「〇〇を△△にして」（曖昧でも大丈夫。会話で詰められます）</td></tr>
+      <tr><td>根拠を知りたい</td><td>「なぜそうしたのか説明して」／「実測値を見せて」</td></tr>
+      <tr><td>やり過ぎを止めたい</td><td>「そこまではやらないで。〇〇までにとどめて」</td></tr>
+      <tr><td>用語が分からない</td><td>「〇〇とは何ですか。いまの場面でなぜ必要ですか」</td></tr>
+    </tbody>
+  </table>
+
+  <h3>用語の最小セット</h3>
+  <table>
+    <thead><tr><th style="width:22%">用語</th><th>ざっくり言うと</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Plan Mode</strong></td><td>ファイルを変更せず、計画だけ出すモード</td></tr>
+      <tr><td><strong>Auto Mode</strong></td><td>確認を省いて連続で作業を進めるモード</td></tr>
+      <tr><td><strong>スラッシュコマンド</strong></td><td>プロジェクトごとに定義できるショートカット</td></tr>
+      <tr><td><strong>サブエージェント</strong></td><td>特定作業を任せる別の担当。専門の指示を持っている</td></tr>
+      <tr><td><strong>MCP</strong></td><td>外部ツールを操作できるようにする接続の規格。今回はブラウザ操作に使います</td></tr>
+      <tr><td><strong>スキル</strong></td><td>「このやり方で書いて」という手順書。プロジェクトに置ける</td></tr>
+      <tr><td><strong>E2E テスト</strong></td><td>実際のブラウザで画面を操作して確認する自動テスト</td></tr>
+      <tr><td><strong><code>CLAUDE.md</code></strong></td><td>プロジェクトの決まりごとを書くファイル。毎回読まれる</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ===================== 12 ===================== -->
+<section id="c3">
+  <h2><span class="num">12</span>詰まったときは</h2>
+
+  <table>
+    <thead><tr><th style="width:34%">こうなったら</th><th>こうする</th></tr></thead>
+    <tbody>
+      <tr><td>思った方向と違うものが出てきた</td><td><strong>途中で止めて構いません。</strong>「違います。〇〇にして」と伝えるだけ。作り直しは速いです</td></tr>
+      <tr><td>同じところで数回つまずいている</td><td>「一歩引いて、別のやり方を提案して」と伝える。または別の要件に移って後で戻る</td></tr>
+      <tr><td>説明が難しくて分からない</td><td>「もっと簡単な言葉で」「たとえで説明して」と頼む。分からないまま進めないでください</td></tr>
+      <tr><td>長すぎて読めない</td><td>「3行で要点だけ」と頼む</td></tr>
+      <tr><td>何をすればいいか分からなくなった</td><td>「いまどこまで進んで、次に何をすべきか整理して」と頼む</td></tr>
+      <tr><td>会話が長くなって重い</td><td><code>/compact</code> を入力する（あなたの操作）</td></tr>
+      <tr><td>アプリが起動しない</td><td>講師に伝える。環境側の問題である可能性が高いです</td></tr>
+      <tr><td>ブラウザで画面が開けない</td><td>講師に伝える。アクセス方法が環境によって違います</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box g">
+    <div class="h">遠慮しないでください</div>
+    <p><strong>「もう一度やって」「やっぱりこうして」は何度でも言えます。</strong>手戻りのコストがほぼゼロなのが、この道具のいちばんの特徴です。丁寧に頼む必要もありません。短く、率直に伝えてください。</p>
+  </div>
+</section>
+
+<!-- ===================== 13 ===================== -->
+<section id="c4">
+  <h2><span class="num">13</span>自己チェックリスト</h2>
+  <p class="lead">各セッションの終わりに確認してください。全部埋まれば、このワークショップの目的は達成です。</p>
+
+  <h3>課題1（前半）</h3>
+  <ul class="chk">
+    <li><kbd>@</kbd> を使って自分でファイルを渡した</li>
+    <li>RFP の<strong>曖昧な箇所を1つ以上</strong>自分の言葉で指摘した</li>
+    <li>クライアント役として質問に答え、それが文書に反映されるのを確認した</li>
+    <li><strong>1箇所以上、成果物を直させた</strong>（これが最重要）</li>
+    <li>プレゼン資料をブラウザで開いて全ページ見た</li>
+    <li>資料の中で「AI に任せられない項目」を特定した</li>
+  </ul>
+
+  <h3>課題2（後半）</h3>
+  <ul class="chk">
+    <li><code>/start</code> を自分で入力してアプリを起動した</li>
+    <li>画面を触って、おかしいところを<strong>自分で1つ以上</strong>見つけた</li>
+    <li><kbd>Shift</kbd>+<kbd>Tab</kbd> ×2 で <strong>Plan Mode に入った</strong>（これも最重要）</li>
+    <li>実装を観察して、観察シートに4項目以上書いた</li>
+    <li>Claude の間違いを1つ以上目撃し、どう立て直したか説明できる</li>
+    <li>進捗報告書を生成させ、内容を評価した</li>
+  </ul>
+
+  <h3>持ち帰り</h3>
+  <ul class="chk">
+    <li>明日から試すことを<strong>1つ</strong>決めた</li>
+    <li>それを誰かに口で説明できる</li>
+  </ul>
+</section>
+
+<footer>
+  参加者用ガイドブック / Claude Code ワークショップ<br>
+  題材: RFP MC-2026-0417（Meridian Components 在庫管理ダッシュボード）<br>
+  この資料には課題の答えを記載していません。発見は自分の手で行ってください<br>
+  講師用の資料は <code>proposal/workshop-guide-instructor.html</code> にあります
+</footer>
+
+</div>
+</body>
+</html>
