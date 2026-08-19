@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>プロジェクト進捗報告書 — Meridian Components 在庫ダッシュボード</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0f172a; --ink-2:#1e293b; --muted:#64748b; --muted-2:#94a3b8;
+  --line:#e2e8f0; --bg:#f8fafc; --white:#fff;
+  --green:#16a34a; --blue:#2563eb; --amber:#d97706; --red:#dc2626;
+  --sans:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --mono:"Roboto Mono","SF Mono",Consolas,"Noto Sans JP","Hiragino Kaku Gothic ProN",monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);line-height:1.75;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto;padding:0 32px 100px}
+
+header{background:var(--ink);color:#e2e8f0;padding:52px 0 44px;margin-bottom:48px;
+  background-image:linear-gradient(rgba(148,163,184,.1) 1px,transparent 1px),linear-gradient(90deg,rgba(148,163,184,.1) 1px,transparent 1px);
+  background-size:40px 40px}
+header .wrap{padding-bottom:0}
+.kicker{font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.18em;color:var(--muted-2);text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:12px}
+.kicker .bar{width:30px;height:2px;background:currentColor}
+header h1{font-size:38px;font-weight:900;letter-spacing:-.02em;line-height:1.28;color:#f1f5f9}
+header p.sub{font-size:16.5px;color:#cbd5e1;margin-top:14px;max-width:780px}
+.hmeta{display:flex;flex-wrap:wrap;gap:36px;margin-top:32px;padding-top:24px;border-top:1px solid rgba(148,163,184,.28)}
+.hmeta div .k{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase;margin-bottom:5px}
+.hmeta div .v{font-size:14.5px;font-weight:500;color:#e2e8f0}
+
+section{margin-bottom:58px}
+h2{font-size:26px;font-weight:700;letter-spacing:-.01em;margin-bottom:8px;padding-bottom:14px;border-bottom:3px solid var(--ink);display:flex;align-items:baseline;gap:14px}
+h2 .num{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--muted-2)}
+h3{font-size:18.5px;font-weight:700;margin:32px 0 12px}
+p{margin-bottom:14px;color:var(--ink-2)}
+.lead{font-size:17px;color:var(--ink-2);margin:18px 0 24px}
+code{font-family:var(--mono);font-size:.885em;background:#eef2f7;padding:2px 6px;border-radius:3px}
+strong{font-weight:700;color:var(--ink)}
+
+table{width:100%;border-collapse:collapse;background:var(--white);margin:20px 0;font-size:14px}
+th,td{text-align:left;padding:12px 15px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);background:#f1f5f9;border-bottom:2px solid var(--ink);white-space:nowrap}
+td.num{font-family:var(--mono);text-align:right;white-space:nowrap;font-weight:700}
+td.mono{font-family:var(--mono)}
+tbody tr:last-child td{border-bottom:none}
+tr.tot td{background:#f1f5f9;font-weight:700;border-top:2px solid var(--ink)}
+
+.chip{display:inline-block;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.07em;padding:3px 8px;border-radius:2px;white-space:nowrap}
+.chip.g{background:#dcfce7;color:#15803d}
+.chip.b{background:#dbeafe;color:#1d4ed8}
+.chip.a{background:#fef3c7;color:#b45309}
+.chip.r{background:#fee2e2;color:#b91c1c}
+.chip.n{background:#e2e8f0;color:#475569}
+
+.box{background:var(--white);border:1px solid var(--line);border-left:3px solid var(--muted);padding:20px 24px;margin:22px 0}
+.box .h{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.box p:last-child{margin-bottom:0}
+.box.b{border-left-color:var(--blue)} .box.b .h{color:var(--blue)}
+.box.g{border-left-color:var(--green)} .box.g .h{color:var(--green)}
+.box.a{border-left-color:var(--amber)} .box.a .h{color:var(--amber)}
+.box.r{border-left-color:var(--red)} .box.r .h{color:var(--red)}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px;margin:24px 0}
+.stat{background:var(--white);border:1px solid var(--line);border-left:3px solid var(--ink);padding:18px 20px}
+.stat .v{font-family:var(--mono);font-size:28px;font-weight:700;line-height:1;letter-spacing:-.02em}
+.stat .k{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.55}
+.stat.g{border-left-color:var(--green)} .stat.g .v{color:var(--green)}
+.stat.b{border-left-color:var(--blue)}  .stat.b .v{color:var(--blue)}
+.stat.a{border-left-color:var(--amber)} .stat.a .v{color:var(--amber)}
+.stat.r{border-left-color:var(--red)}   .stat.r .v{color:var(--red)}
+
+.prog{background:var(--white);border:1px solid var(--line);padding:24px 26px;margin:22px 0}
+.prow{display:grid;grid-template-columns:118px 1fr 62px;gap:14px;align-items:center;margin-bottom:12px}
+.prow:last-child{margin-bottom:0}
+.prow .lb{font-size:13.5px;font-weight:700}
+.prow .lb span{display:block;font-family:var(--mono);font-size:10px;color:var(--muted-2);font-weight:400;letter-spacing:.06em}
+.track{height:22px;background:#f1f5f9;position:relative;border-radius:2px;overflow:hidden}
+.fill{position:absolute;left:0;top:0;bottom:0;border-radius:2px}
+.fill.done{background:var(--green)}
+.fill.part{background:var(--amber)}
+.fill.none{background:var(--muted-2)}
+.pct{font-family:var(--mono);font-size:12.5px;font-weight:700;text-align:right}
+
+.tl{background:var(--white);border:1px solid var(--line);padding:24px 26px;margin:22px 0;overflow-x:auto}
+.tl-inner{min-width:720px}
+.tl .hd{display:grid;grid-template-columns:150px 1fr;gap:14px;font-family:var(--mono);font-size:10px;color:var(--muted-2);letter-spacing:.1em;margin-bottom:10px}
+.tl .ticks{display:grid;grid-template-columns:repeat(15,1fr);text-align:center}
+.trow{display:grid;grid-template-columns:150px 1fr;gap:14px;align-items:center;margin-bottom:9px}
+.trow .lb{font-size:12.5px;font-weight:700;text-align:right}
+.tk{display:grid;grid-template-columns:repeat(15,1fr);height:28px;background:#f1f5f9;position:relative}
+.tk i{border-right:1px solid var(--white)}
+.bar{position:absolute;top:4px;bottom:4px;border-radius:2px;display:flex;align-items:center;padding:0 10px;font-family:var(--mono);font-size:10px;font-weight:700;color:#fff;letter-spacing:.05em;white-space:nowrap}
+.bar.b1,.bar.b2,.bar.b3{background:var(--green)}
+.bar.b4{background:var(--muted-2)}
+.bar.b5{background:var(--ink)}
+.now{position:absolute;top:-6px;bottom:-6px;width:2px;background:var(--red);z-index:3}
+.now::after{content:"現在";position:absolute;top:-18px;left:5px;font-family:var(--mono);font-size:9.5px;font-weight:700;color:var(--red);white-space:nowrap}
+
+ul.plain{list-style:none;margin:14px 0}
+ul.plain li{padding-left:22px;position:relative;margin-bottom:10px;font-size:14.5px;color:var(--ink-2)}
+ul.plain li::before{content:"▸";position:absolute;left:0;color:var(--muted-2);font-weight:700}
+
+.seq{counter-reset:sq;list-style:none;margin:20px 0}
+.seq li{counter-increment:sq;background:var(--white);border:1px solid var(--line);padding:15px 18px 15px 58px;position:relative;margin-bottom:9px;font-size:14px}
+.seq li::before{content:counter(sq);position:absolute;left:0;top:0;bottom:0;width:42px;display:flex;align-items:center;justify-content:center;background:#f1f5f9;border-right:1px solid var(--line);font-family:var(--mono);font-size:13px;font-weight:700;color:var(--muted)}
+
+footer{border-top:1px solid var(--line);margin-top:66px;padding-top:26px;font-family:var(--mono);font-size:11.5px;color:var(--muted-2);line-height:2}
+
+@media print{body{background:#fff}header{background:var(--ink)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}section{page-break-inside:avoid}}
+@media (max-width:800px){.wrap{padding:0 20px 60px}header h1{font-size:28px}.prow{grid-template-columns:96px 1fr 52px}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="kicker"><span class="bar"></span>PROJECT PROGRESS REPORT</div>
+    <h1>プロジェクト進捗報告書</h1>
+    <p class="sub">Meridian Components 在庫管理ダッシュボード モダナイズおよび機能拡張 / RFP MC-2026-0417</p>
+    <div class="hmeta">
+      <div><div class="k">Client</div><div class="v">Meridian Components, Inc.</div></div>
+      <div><div class="k">Report date</div><div class="v">2026年8月19日</div></div>
+      <div><div class="k">Phase</div><div class="v">フェーズ3 完了時点</div></div>
+      <div><div class="k">Contract</div><div class="v">上限額付き T&amp;M</div></div>
+      <div><div class="k">Contact</div><div class="v">J. Okafor 様 / R. Tanaka 様 / IT 部門</div></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<section>
+  <h2><span class="num">01</span>要旨</h2>
+  <p class="lead"><strong>必須項目 R1〜R4 のすべてが完了しました。</strong>スケジュール上のマイルストーン（2026年8月14日）を満たし、残るは希望項目（D1・D3・D2）と引き継ぎです。</p>
+
+  <div class="stats">
+    <div class="stat g"><div class="v">4 / 4</div><div class="k">必須項目<br>R1・R2・R3・R4 完了</div></div>
+    <div class="stat b"><div class="v">142</div><div class="k">自動テスト総数<br>E2E 67 + API 75</div></div>
+    <div class="stat g"><div class="v">5</div><div class="k">解消した技術的負債<br>D-03/04/07/09/14</div></div>
+    <div class="stat a"><div class="v">6</div><div class="k">ご判断を仰ぐ事項<br>§06 参照</div></div>
+  </div>
+
+  <div class="box g">
+    <div class="h">IT 部門の承認ボトルネックは解除されました</div>
+    <p>本案件の最大の制約は「テストがないため IT 部門が変更を承認できない」という循環でした。提案時にこれを最優先課題として位置づけ、フェーズ1で<strong>ブラウザ E2E テスト 67 件</strong>を先に整備しました。</p>
+    <p>その結果、R1 の全面改修（<code>Reports.vue</code> を Options API から Composition API へ移行）を、<strong>計算結果を壊していないことをテストで確認しながら</strong>実施できました。前任ベンダーの環境にはこの安全網がありませんでした。</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">02</span>要件別の進捗</h2>
+
+  <div class="prog">
+    <div class="prow">
+      <div class="lb">R1<span>REPORTS 改修</span></div>
+      <div class="track"><div class="fill done" style="width:100%"></div></div>
+      <div class="pct">100%</div>
+    </div>
+    <div class="prow">
+      <div class="lb">R2<span>発注推奨機能</span></div>
+      <div class="track"><div class="fill done" style="width:100%"></div></div>
+      <div class="pct">100%</div>
+    </div>
+    <div class="prow">
+      <div class="lb">R3<span>ブラウザテスト</span></div>
+      <div class="track"><div class="fill done" style="width:100%"></div></div>
+      <div class="pct">100%</div>
+    </div>
+    <div class="prow">
+      <div class="lb">R4<span>アーキテクチャ文書</span></div>
+      <div class="track"><div class="fill done" style="width:100%"></div></div>
+      <div class="pct">100%</div>
+    </div>
+    <div class="prow">
+      <div class="lb">D2<span>国際化の拡張</span></div>
+      <div class="track"><div class="fill part" style="width:35%"></div></div>
+      <div class="pct">35%</div>
+    </div>
+    <div class="prow">
+      <div class="lb">D1 + D3<span>視認性・ダークモード</span></div>
+      <div class="track"><div class="fill none" style="width:0%"></div></div>
+      <div class="pct">0%</div>
+    </div>
+  </div>
+
+  <table>
+    <thead><tr><th style="width:8%">要件</th><th style="width:12%">状態</th><th>内容と成果物</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="mono">R1</td>
+        <td><span class="chip g">完了</span></td>
+        <td><strong>Reports モジュールの改修。</strong>RFP が挙げた4カテゴリの症状（フィルター挙動・i18n の不備・データパターンの不整合・コンソール出力）は個別の不具合ではなく、<strong>単一の原因が4つの症状として表面化したもの</strong>でした（§03 参照）。<code>Reports.vue</code> を他6ビューと同じ構造へ揃え、あわせて調査中に判明した金額の切り捨て（D-14）も解消しています。</td>
+      </tr>
+      <tr>
+        <td class="mono">R2</td>
+        <td><span class="chip g">完了</span></td>
+        <td><strong>発注推奨機能。</strong><code>GET /api/restocking</code> と新規ビュー <code>Restocking.vue</code>。算出方法は <code>restocking-logic.md</code> に文書化し、<strong>実装前にご確認をいただいてから</strong>着手しました（前提条件 A4）。予算上限の入力、優先順位付け、見送り理由の表示に対応。</td>
+      </tr>
+      <tr>
+        <td class="mono">R3</td>
+        <td><span class="chip g">完了</span></td>
+        <td><strong>ブラウザテストの自動化。</strong><code>tests/e2e/</code> に Playwright スイート 67 件。IT 部門向けの実行手順書（<code>README.md</code>、194行）を同梱し、<strong>IT 部門が自ら実行できる状態</strong>まで引き継ぎ可能です。</td>
+      </tr>
+      <tr>
+        <td class="mono">R4</td>
+        <td><span class="chip g">完了</span></td>
+        <td><strong>アーキテクチャドキュメント。</strong><code>architecture.html</code>（729行）。単一 HTML のため閲覧に開発環境は不要です。構成図・データフロー・API 一覧・実装パターン・技術的負債 D-01〜D-14 を実測値付きで収録。フェーズ2・3の変更を反映済み。</td>
+      </tr>
+      <tr>
+        <td class="mono">D2</td>
+        <td><span class="chip a">一部完了</span></td>
+        <td><strong>国際化対応の拡張。</strong>R1・R2 の一環として <code>reports.*</code>、<code>restocking.*</code>、<code>nav.*</code> の翻訳定義を追加しました。残る未対応箇所はフェーズ4で対応します。</td>
+      </tr>
+      <tr>
+        <td class="mono">D1<br>D3</td>
+        <td><span class="chip n">未着手</span></td>
+        <td><strong>視認性の改善とダークモード。</strong>フェーズ4で対応予定。「倉庫フロアでの視認性を最優先に」とのご回答により<strong>両項目をひとつの設計課題として扱います</strong>。なお R2 の在庫日数表示では、色のみに依存せず太字を併用する方針を先行適用しています。</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2><span class="num">03</span>R1 — 調査で判明した構造</h2>
+  <p class="lead">RFP には「少なくとも8件の問題」と記載されていました。調査の結果、これらは<strong>8つの独立した不具合ではありませんでした。</strong></p>
+
+  <p>ビュー7つ × 規約5項目で準拠状況を突き合わせたところ、<code>Reports.vue</code> の行だけがすべて不適合でした。</p>
+
+  <table>
+    <thead><tr><th style="width:24%">ビュー</th><th><code>useFilters</code></th><th><code>useI18n</code></th><th>Composition API</th><th><code>api.js</code> 経由</th><th>console.log</th></tr></thead>
+    <tbody>
+      <tr><td>他6ビュー</td><td><span class="chip g">✓</span></td><td><span class="chip g">✓</span></td><td><span class="chip g">✓</span></td><td><span class="chip g">✓</span></td><td class="num">1</td></tr>
+      <tr class="tot"><td><code>Reports.vue</code>（修正前）</td><td><span class="chip r">✗</span></td><td><span class="chip r">✗</span></td><td><span class="chip r">✗</span></td><td><span class="chip r">✗</span></td><td class="num" style="color:var(--red)">13</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box b">
+    <div class="h">原因の連鎖を特定しました</div>
+    <p><strong>D-04 → D-03。</strong> <code>api.js</code> にレポート系のラッパー関数が無かったため、<code>Reports.vue</code> は axios を直接呼ぶしかありませんでした。そこから共通基盤への未接続が連鎖しています。</p>
+    <p>したがって修正は「症状を1つずつ潰す」のではなく、<strong>まず <code>api.js</code> を直し、そのうえでビューを既存パターンへ移行する</strong>順序で実施しました。提案書の技術アプローチに記した「原因が共通であれば複数の症状が単一の修正で解消する」が、そのまま当てはまりました。</p>
+  </div>
+
+  <h3>実測された改善</h3>
+  <table>
+    <thead><tr><th style="width:26%">項目</th><th style="width:26%">修正前</th><th>修正後</th></tr></thead>
+    <tbody>
+      <tr><td>コンソール出力</td><td><span class="chip r">1表示あたり約80行</span></td><td><span class="chip g">0行</span>。<code>formatNumber</code> 等がテンプレートから呼ばれ、レンダリングごとに出力していた状態を解消</td></tr>
+      <tr><td>表示言語</td><td>画面全体が英語</td><td>日本語表示に対応。ナビゲーションの「Reports」も翻訳</td></tr>
+      <tr><td>表示通貨</td><td>Reports のみ USD（他画面は JPY）</td><td>全画面で統一。同一データが2通貨で表示される状態を解消</td></tr>
+      <tr><td>フィルター</td><td>操作しても表示が変わらない</td><td>連動。東京で絞ると 250件 → 88件、売上高 ¥4.67B → ¥1.95B</td></tr>
+      <tr><td>金額の丸め</td><td><span class="chip r">切り捨て</span> <code>$30,082.22</code></td><td><span class="chip g">四捨五入</span> <code>$30,082.23</code>。全金額が最大1銭低く表示されていた（D-14）</td></tr>
+      <tr><td>四半期フィルター</td><td>未定義の年で<strong>全件が素通り</strong></td><td>年に依存しない判定。該当なしなら空を返す（D-07）</td></tr>
+      <tr><td>ブランド表示</td><td>前任ベンダーの別案件の社名</td><td>Meridian Components に是正（D-09）</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2><span class="num">04</span>R2 — 発注推奨機能</h2>
+  <p class="lead">実装に先立ち算出方法を文書化し、<strong>3点についてご確認をいただいてから</strong>着手しました。合意内容はそのまま実装に反映されています。</p>
+
+  <table>
+    <thead><tr><th style="width:24%">ご確認事項</th><th style="width:22%">ご回答</th><th>実装</th></tr></thead>
+    <tbody>
+      <tr><td>予算内での優先基準</td><td><strong>欠品リスク優先</strong></td><td>在庫日数の昇順。需要予測がない品目は欠品リスクを算出できないため後段に置き、在庫比率の昇順とする</td></tr>
+      <tr><td>部分発注の可否</td><td><strong>全量かゼロ</strong></td><td>不足数を満たせない品目は推奨しない。数量を削らない</td></tr>
+      <tr><td>予測なし23品目の扱い</td><td><strong>発注点割れのみ推奨</strong></td><td>発注点までの補充のみ。画面に「需要予測なし」を明示し、<strong>推測で数量を作らない</strong></td></tr>
+    </tbody>
+  </table>
+
+  <h3>算出結果（予算 $60,000 の例）</h3>
+  <p>仕様書 §7 に記載した判定例が、実装で完全に再現されました。</p>
+
+  <table>
+    <thead><tr><th style="width:7%">優先</th><th style="width:13%">SKU</th><th style="width:13%">在庫日数</th><th style="width:15%">発注金額</th><th style="width:24%">判定</th><th>残予算</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">1</td><td class="mono">SRV-301</td><td class="num">14.2日</td><td class="num">$44,500</td><td><span class="chip g">推奨</span></td><td class="num">$15,500</td></tr>
+      <tr><td class="mono">2</td><td class="mono">TMP-201</td><td class="num">14.4日</td><td class="num">$25,508</td><td><span class="chip a">見送り</span> 予算超過</td><td class="num">$15,500</td></tr>
+      <tr><td class="mono">3</td><td class="mono">SRV-302</td><td class="num">15.3日</td><td class="num">$41,325</td><td><span class="chip a">見送り</span> 予算超過</td><td class="num">$15,500</td></tr>
+      <tr><td class="mono">4</td><td class="mono">PSU-508</td><td class="num">16.1日</td><td class="num">$30,608</td><td><span class="chip a">見送り</span> 予算超過</td><td class="num">$15,500</td></tr>
+      <tr><td class="mono">5</td><td class="mono">STP-303</td><td class="num">40.4日</td><td class="num">$7,800</td><td><span class="chip g">推奨</span></td><td class="num">$7,700</td></tr>
+      <tr><td class="mono">6</td><td class="mono">PCB-001</td><td class="num">44.3日</td><td class="num">$1,374</td><td><span class="chip g">推奨</span></td><td class="num">$6,326</td></tr>
+      <tr><td class="mono">7</td><td class="mono">MCU-401</td><td class="num">50.0日</td><td class="num">$165</td><td><span class="chip g">推奨</span></td><td class="num">$6,161</td></tr>
+      <tr><td class="mono">8</td><td class="mono">PSU-501</td><td class="num">50.0日</td><td class="num">$228</td><td><span class="chip g">推奨</span></td><td class="num">$5,933</td></tr>
+      <tr class="tot"><td colspan="3">推奨 5 品目</td><td class="num">$54,067</td><td colspan="2">見送り 3 品目 / 追加所要 $97,440</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box b">
+    <div class="h">設計上の2つの判断</div>
+    <p><strong>予算に収まらない品目で打ち切りません。</strong> 上表では高額な2〜4位を飛ばし、5位以降の安価な品目を確保しています。高額品目1件で予算を使い切るより、複数品目を確保できるほうが業務上有利な場合があるためです。</p>
+    <p><strong>見送り品目を画面から隠しません。</strong> 8件すべてを表示し、見送り行には理由と必要額を示します。オペレーターが「あといくら追加すれば何が発注できるか」を判断できる状態にしました。</p>
+  </div>
+
+  <div class="box a">
+    <div class="h">実装中に解消した不整合</div>
+    <p>予算上限の入力欄が USD 固定である一方、結果表示は日本語ロケールで JPY となる状態でした。アプリ全体が表示言語に応じて通貨を切り替えているため、この欄のみ固定なのは不整合です。<strong>入力欄を表示通貨に追随させ</strong>、API へは USD の基準値に戻して送信する形に改めました。</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">05</span>テストの整備状況</h2>
+  <p class="lead">要件 R3 の中心的な成果です。実行は約13秒で完了し、CI に組み込める状態です。</p>
+
+  <div class="stats">
+    <div class="stat b"><div class="v">67</div><div class="k">E2E テスト（新規）<br>全件パス / 約13秒</div></div>
+    <div class="stat g"><div class="v">75</div><div class="k">API テスト<br>73 パス / 2 失敗（既存）</div></div>
+    <div class="stat g"><div class="v">+35</div><div class="k">R2 で追加した<br>API テスト</div></div>
+    <div class="stat b"><div class="v">0</div><div class="k">終了コード<br>CI 組み込み可</div></div>
+  </div>
+
+  <table>
+    <thead><tr><th style="width:36%">スイート</th><th style="width:10%">件数</th><th>対象</th></tr></thead>
+    <tbody>
+      <tr><td><code>01-smoke.spec.js</code></td><td class="num">10</td><td>全7ルートの描画、ナビゲーション遷移</td></tr>
+      <tr><td><code>02-inventory.spec.js</code></td><td class="num">6</td><td>在庫の表示、倉庫・カテゴリー絞り込み、フィルター保持</td></tr>
+      <tr><td><code>03-orders.spec.js</code></td><td class="num">6</td><td>受注の表示、ステータス・期間絞り込み、リセット</td></tr>
+      <tr><td><code>04-spending.spec.js</code></td><td class="num">3</td><td>支出の表示、4エンドポイントの取得</td></tr>
+      <tr><td><code>05-reports.spec.js</code></td><td class="num">10</td><td>Reports の回帰テスト（R1 の安全網）</td></tr>
+      <tr><td><code>06-console-health.spec.js</code></td><td class="num">6</td><td>コンソール健全性、ブランディング整合性</td></tr>
+      <tr><td><code>07-restocking.spec.js</code></td><td class="num">26</td><td>発注推奨。根拠・優先順位・予算配分・フィルター連動</td></tr>
+      <tr class="tot"><td>合計</td><td class="num">67</td><td>全件パス</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box b">
+    <div class="h">未修正の欠陥をテストとして記録しています</div>
+    <p>ご判断待ちや範囲外の欠陥は <code>test.fail()</code> で「<strong>失敗するのが正しい</strong>」と宣言しています。Playwright はこれを想定どおりの失敗として合格に数えるため、<strong>スイート全体は緑（終了コード 0）を保ちます。</strong></p>
+    <p>そして<strong>欠陥を修正するとテストが成功に転じ、スイートが赤になります。</strong>これは異常ではなく修正完了の合図です。該当宣言を外せば、以降は通常の回帰テストとして機能します。修正すべき事項の一覧が実行可能な形で残り、完了が自動検知される仕組みです。</p>
+    <p>R1 の完了時には、この仕組みにより 7 件が成功に転じました。現在残っているのは 4 件です（D-01・D-02・D-06・D-08）。</p>
+  </div>
+
+  <div class="box r">
+    <div class="h">訂正 — 既存テストの件数と成否</div>
+    <p>提案時、同梱の <code>tests/TEST_SUMMARY.md</code> の記述にもとづき「バックエンド API テスト 55 件が全件パス」とご報告しました。<strong>フェーズ1の実測では 40 件収集・38 件パス・2 件失敗であり、この記述は事実と異なります。</strong></p>
+    <p>失敗している 2 件は需要予測データに期待される SKU（<code>SNR-420</code>）が存在しないことによるもので、<strong>当社の着手前から失敗していた既存の不整合</strong>です（変更前のコードで再現確認済み）。R2 で 35 件を追加した現在は 75 件収集・73 件パス・2 件失敗です。</p>
+    <p>バックエンド層に相応のカバレッジが存在するという結論、および R3 のスコープ判断・見積もりへの影響はありません。<strong>テストが常時 2 件赤である状態は IT 部門の承認判断を妨げる</strong>ため、早期の解消をお勧めします（§06）。</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">06</span>ご判断をお願いしたい事項</h2>
+  <p class="lead">技術的には対応可能ですが、<strong>当社の判断で決めるべきでない</strong>事項です。フェーズ4の着手前にご回答をいただけますと、計画に反映できます。</p>
+
+  <ol class="seq">
+    <li><strong>D-05 — 為替レートの扱い。</strong> <code>utils/currency.js</code> に <code>USD_TO_JPY = 150</code> が定数として直書きされています。既定ロケールが日本語であるため、<strong>東京拠点のオペレーターが通常目にする金額はすべてこの固定レートによる換算値</strong>です。レート更新の手段はコード変更以外にありません。<br>選択肢: (1) 固定レートを維持、(2) 設定可能にする、(3) 日本語表示でも USD を維持。<strong>会計上の扱いに関わるため当社では判断できません。</strong></li>
+
+    <li><strong>D-02 — 発注実行機能の去就。</strong> <code>Dashboard.vue</code> が <code>&lt;PurchaseOrderModal&gt;</code> を参照していますが、コンポーネントが存在しません。「Create PO」ボタンは表示されるものの<strong>押しても何も起きません</strong>。これは<strong>発注の実行</strong>を担う UI であり、前提条件 A5（発注実行の連携は範囲外）により R2 の納品範囲外です。当社の判断で UI を削除することは避け、現状のまま残しています。<br>選択肢: (1) 発注実行機能として完成させる（別途お見積もり）、(2) 動作しない UI を撤去する、(3) 現状維持。<strong>(1) または (2) を推奨します。</strong></li>
+
+    <li><strong>D-01 — タスク機能の去就。</strong> <code>TasksModal.vue</code>（621行）が未実装の <code>/api/tasks</code> に依存しており、<strong>全ページの起動時に 404 エラーが発生</strong>します（<code>App.vue</code> から呼ばれるため）。コンソールにエラーが出続ける状態は IT 部門の異常検知を妨げます。<br>選択肢: (1) バックエンドを実装して完成させる（別途お見積もり）、(2) UI ごと撤去する。<strong>本提案の範囲外です。</strong></li>
+
+    <li><strong>D-06 — <code>Backlog.vue</code> の去就。</strong> 152行のビューが存在しますが、ルートが未定義で画面から到達できません。バックログ表示は <code>Dashboard.vue</code> にインライン実装があるため、機能面の欠落は生じていません。<br>選択肢: (1) ルートを追加して復活、(2) 削除。</li>
+
+    <li><strong>D-08 — 支出画面のフィルター。</strong> <code>/api/spending/*</code> がクエリパラメータを受け取らないため、<strong>UI 上でフィルターを操作しても支出データに反映されません。</strong> フィルターバーが表示されているため、オペレーターは効くと考えている可能性があります。対応可否のご判断をお願いします。</li>
+
+    <li><strong>需要予測テストの失敗 2 件。</strong> <code>demand_forecasts.json</code> に <code>SNR-420</code> を追加するか、テストを現行データに合わせるかの判断が必要です。データの正誤はコードからは判断できません。</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">07</span>スケジュールに対する位置</h2>
+
+  <div class="tl">
+    <div class="tl-inner">
+      <div class="hd">
+        <div></div>
+        <div class="ticks"><span>W1</span><span>W2</span><span>W3</span><span>W4</span><span>W5</span><span>W6</span><span>W7</span><span>W8</span><span>W9</span><span>W10</span><span>W11</span><span>W12</span><span>W13</span><span>W14</span><span>W15</span></div>
+      </div>
+      <div class="trow">
+        <div class="lb">P1 現状把握・安全網</div>
+        <div class="tk"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          <div class="bar b1" style="left:0;width:20%">R4 · R3 完了</div>
+        </div>
+      </div>
+      <div class="trow">
+        <div class="lb">P2 Reports 改修</div>
+        <div class="tk"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          <div class="bar b2" style="left:20%;width:20%">R1 完了</div>
+        </div>
+      </div>
+      <div class="trow">
+        <div class="lb">P3 発注推奨機能</div>
+        <div class="tk"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          <div class="bar b3" style="left:40%;width:33.33%">R2 完了</div>
+          <div class="now" style="left:73.33%"></div>
+        </div>
+      </div>
+      <div class="trow">
+        <div class="lb">P4 視認性・国際化</div>
+        <div class="tk"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          <div class="bar b4" style="left:73.33%;width:20%">D1 · D3 · D2（任意）</div>
+        </div>
+      </div>
+      <div class="trow">
+        <div class="lb">P5 引き継ぎ</div>
+        <div class="tk"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          <div class="bar b5" style="left:93.33%;width:6.67%">移管</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p><strong>必須項目の完了マイルストーン（2026年8月14日）を満たしました。</strong>提案時の構造どおり、必須項目をすべてフェーズ3までに収め、希望項目を最後に配置しています。この配置により、フェーズ4で遅延や仕様変更が生じても<strong>必須項目の納期には影響しません。</strong></p>
+
+  <h3>フェーズ4以降の予定</h3>
+  <ul class="plain">
+    <li><strong>フェーズ4（週12〜14）.</strong> D1 + D3 を「倉庫フロアでの視認性」というひとつの設計課題として実装し、続いて D2 の未対応画面へ展開します。冒頭でデザイン案をご確認いただきます。<strong>必須項目が完了しているため、本フェーズは中止・縮小をご判断いただけます。</strong></li>
+    <li><strong>フェーズ5（週15）.</strong> IT 部門へのテスト運用引き継ぎ、ドキュメントの最終更新、残課題の一覧化、最終検収。</li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="num">08</span>納品済み成果物</h2>
+
+  <table>
+    <thead><tr><th style="width:40%">成果物</th><th style="width:12%">規模</th><th>内容</th></tr></thead>
+    <tbody>
+      <tr><td><code>proposal/architecture.html</code></td><td class="num">729 行</td><td>アーキテクチャドキュメント（R4）。単一 HTML、閲覧に開発環境不要</td></tr>
+      <tr><td><code>proposal/restocking-logic.md</code></td><td class="num">169 行</td><td>発注推奨ロジック仕様書（R2 の事前合意文書）</td></tr>
+      <tr><td><code>tests/e2e/</code></td><td class="num">67 件</td><td>ブラウザ E2E テストスイート（R3）+ IT 部門向け手順書</td></tr>
+      <tr><td><code>tests/backend/test_restocking.py</code></td><td class="num">35 件</td><td>発注推奨の API テスト（R2）</td></tr>
+      <tr><td><code>client/src/views/Restocking.vue</code></td><td class="num">561 行</td><td>発注推奨ビュー（R2、新規）</td></tr>
+      <tr><td><code>client/src/views/Reports.vue</code></td><td class="num">改修</td><td>Composition API へ移行（R1）</td></tr>
+      <tr><td><code>server/main.py</code></td><td class="num">改修</td><td>発注推奨エンドポイント追加、レポート系にフィルター追加</td></tr>
+      <tr><td>提案書一式</td><td class="num">6 点</td><td>第1幕の成果物。ケイパビリティ・プレゼン（12枚）を含む</td></tr>
+    </tbody>
+  </table>
+
+  <p><strong>変更規模:</strong> 受注後の変更は 35 ファイル / 5,123 行追加 / 242 行削除。3 コミットに整理済みです。</p>
+
+  <div class="box g">
+    <div class="h">各フェーズ終了時点で動くものをお渡しする方針について</div>
+    <p>提案時にお約束したとおり、フェーズごとに動作し、テストで守られ、引き継ぎ可能な成果を納品しています。現時点で契約を終える判断をされた場合でも、<strong>必須項目4件はすべて完成しており、Meridian の資産として残ります。</strong></p>
+  </div>
+</section>
+
+<footer>
+  プロジェクト進捗報告書 / Meridian Components, Inc. / RFP MC-2026-0417 / 2026年8月19日<br>
+  報告時点: フェーズ3 完了（必須項目 R1〜R4 完了）<br>
+  検証方法: E2E テスト 67 件、API テスト 75 件の実行結果、および稼働中アプリケーションに対する実機確認にもとづく
+</footer>
+
+</div>
+</body>
+</html>

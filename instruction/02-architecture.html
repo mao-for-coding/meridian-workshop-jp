@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>アーキテクチャドキュメント — Meridian Components 在庫管理ダッシュボード</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0f172a; --ink-2:#1e293b; --muted:#64748b; --muted-2:#94a3b8;
+  --line:#e2e8f0; --bg:#f8fafc; --white:#fff;
+  --green:#16a34a; --blue:#2563eb; --amber:#d97706; --red:#dc2626;
+  --sans:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --mono:"Roboto Mono","SF Mono",Consolas,"Noto Sans JP","Hiragino Kaku Gothic ProN",monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);line-height:1.75;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto;padding:0 32px 100px}
+
+/* header */
+header{background:var(--ink);color:#e2e8f0;padding:52px 0 44px;margin-bottom:52px;
+  background-image:linear-gradient(rgba(148,163,184,.1) 1px,transparent 1px),linear-gradient(90deg,rgba(148,163,184,.1) 1px,transparent 1px);
+  background-size:40px 40px}
+header .wrap{padding-bottom:0}
+.kicker{font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.18em;color:var(--muted-2);text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:12px}
+.kicker .bar{width:30px;height:2px;background:currentColor}
+header h1{font-size:40px;font-weight:900;letter-spacing:-.02em;line-height:1.25;color:#f1f5f9}
+header p.sub{font-size:16.5px;color:#cbd5e1;margin-top:14px;max-width:760px}
+.hmeta{display:flex;flex-wrap:wrap;gap:36px;margin-top:32px;padding-top:24px;border-top:1px solid rgba(148,163,184,.28)}
+.hmeta div .k{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase;margin-bottom:5px}
+.hmeta div .v{font-size:14.5px;font-weight:500;color:#e2e8f0}
+
+/* sections */
+section{margin-bottom:60px;scroll-margin-top:20px}
+h2{font-size:27px;font-weight:700;letter-spacing:-.01em;margin-bottom:8px;padding-bottom:14px;border-bottom:3px solid var(--ink);display:flex;align-items:baseline;gap:14px}
+h2 .num{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--muted-2);letter-spacing:.05em}
+h3{font-size:19px;font-weight:700;margin:34px 0 12px}
+h4{font-size:15.5px;font-weight:700;margin:22px 0 8px;color:var(--ink-2)}
+p{margin-bottom:14px;color:var(--ink-2)}
+.lead{font-size:17px;color:var(--ink-2);margin:18px 0 24px}
+code{font-family:var(--mono);font-size:.885em;background:#eef2f7;padding:2px 6px;border-radius:3px;color:var(--ink)}
+strong{font-weight:700;color:var(--ink)}
+a{color:var(--blue)}
+
+/* toc */
+nav.toc{background:var(--white);border:1px solid var(--line);border-left:3px solid var(--ink);padding:24px 28px;margin-bottom:56px}
+nav.toc .t{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-bottom:14px}
+nav.toc ol{list-style:none;counter-reset:toc;columns:2;column-gap:44px}
+nav.toc li{counter-increment:toc;margin-bottom:9px;font-size:14.5px;break-inside:avoid}
+nav.toc li::before{content:counter(toc,decimal-leading-zero);font-family:var(--mono);font-size:11px;font-weight:700;color:var(--muted-2);margin-right:11px}
+nav.toc a{text-decoration:none;color:var(--ink-2)}
+nav.toc a:hover{color:var(--blue);text-decoration:underline}
+
+/* diagram */
+.diagram{background:var(--white);border:1px solid var(--line);padding:36px 32px;margin:26px 0;overflow-x:auto}
+.tiers{display:flex;align-items:stretch;gap:0;min-width:860px}
+.tier{flex:1;background:var(--bg);border:1px solid var(--line);border-top:3px solid var(--blue);padding:20px}
+.tier.t2{border-top-color:var(--green)}
+.tier.t3{border-top-color:var(--amber)}
+.tier.t4{border-top-color:var(--muted)}
+.tier .lb{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.13em;color:var(--muted);text-transform:uppercase;margin-bottom:9px}
+.tier .nm{font-size:16px;font-weight:700;margin-bottom:4px}
+.tier .pt{font-family:var(--mono);font-size:11.5px;color:var(--blue);font-weight:700;margin-bottom:12px}
+.tier ul{list-style:none;font-size:12.5px;line-height:1.85;color:var(--muted)}
+.tier ul li::before{content:"·";margin-right:7px;color:var(--muted-2)}
+.flow{width:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:none;gap:4px}
+.flow .ar{font-size:19px;color:var(--muted-2);line-height:1}
+.flow .lbl{font-family:var(--mono);font-size:8.5px;color:var(--muted-2);text-align:center;letter-spacing:.04em;writing-mode:vertical-rl;text-orientation:mixed;max-height:70px}
+
+/* tables */
+table{width:100%;border-collapse:collapse;background:var(--white);margin:20px 0;font-size:14px}
+th,td{text-align:left;padding:12px 15px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);background:#f1f5f9;border-bottom:2px solid var(--ink);white-space:nowrap}
+td.mono,td code{font-family:var(--mono)}
+td.num{font-family:var(--mono);text-align:right;white-space:nowrap;font-weight:700}
+tbody tr:last-child td{border-bottom:none}
+tr.tot td{background:#f1f5f9;font-weight:700;border-top:2px solid var(--ink)}
+
+/* chips */
+.chip{display:inline-block;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.07em;padding:3px 8px;border-radius:2px;white-space:nowrap}
+.chip.g{background:#dcfce7;color:#15803d}
+.chip.b{background:#dbeafe;color:#1d4ed8}
+.chip.a{background:#fef3c7;color:#b45309}
+.chip.r{background:#fee2e2;color:#b91c1c}
+.chip.n{background:#e2e8f0;color:#475569}
+
+/* callouts */
+.box{background:var(--white);border:1px solid var(--line);border-left:3px solid var(--muted);padding:20px 24px;margin:22px 0}
+.box .h{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.box p:last-child{margin-bottom:0}
+.box.b{border-left-color:var(--blue)} .box.b .h{color:var(--blue)}
+.box.g{border-left-color:var(--green)} .box.g .h{color:var(--green)}
+.box.a{border-left-color:var(--amber)} .box.a .h{color:var(--amber)}
+.box.r{border-left-color:var(--red)} .box.r .h{color:var(--red)}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin:24px 0}
+.stat{background:var(--white);border:1px solid var(--line);border-left:3px solid var(--ink);padding:18px 20px}
+.stat .v{font-family:var(--mono);font-size:29px;font-weight:700;line-height:1;letter-spacing:-.02em}
+.stat .k{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.55}
+.stat.g{border-left-color:var(--green)} .stat.g .v{color:var(--green)}
+.stat.b{border-left-color:var(--blue)}  .stat.b .v{color:var(--blue)}
+.stat.a{border-left-color:var(--amber)} .stat.a .v{color:var(--amber)}
+.stat.r{border-left-color:var(--red)}   .stat.r .v{color:var(--red)}
+
+/* tree */
+pre.tree{background:var(--white);border:1px solid var(--line);padding:22px 24px;font-family:var(--mono);font-size:12.5px;line-height:1.85;overflow-x:auto;color:var(--ink-2);margin:20px 0}
+pre.tree .c{color:var(--muted-2)}
+pre.tree .w{color:var(--red);font-weight:700}
+pre.tree .o{color:var(--amber);font-weight:700}
+
+/* seq */
+.seq{counter-reset:sq;list-style:none;margin:20px 0}
+.seq li{counter-increment:sq;background:var(--white);border:1px solid var(--line);padding:15px 18px 15px 58px;position:relative;margin-bottom:9px;font-size:14px}
+.seq li::before{content:counter(sq);position:absolute;left:0;top:0;bottom:0;width:42px;display:flex;align-items:center;justify-content:center;background:#f1f5f9;border-right:1px solid var(--line);font-family:var(--mono);font-size:13px;font-weight:700;color:var(--muted)}
+
+ul.plain{list-style:none;margin:14px 0}
+ul.plain li{padding-left:22px;position:relative;margin-bottom:10px;font-size:14.5px;color:var(--ink-2)}
+ul.plain li::before{content:"▸";position:absolute;left:0;color:var(--muted-2);font-weight:700}
+
+footer{border-top:1px solid var(--line);margin-top:70px;padding-top:26px;font-family:var(--mono);font-size:11.5px;color:var(--muted-2);line-height:2}
+
+@media print{body{background:#fff}header{background:var(--ink)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}section{page-break-inside:avoid}nav.toc{display:none}}
+@media (max-width:800px){nav.toc ol{columns:1}.wrap{padding:0 20px 60px}header h1{font-size:30px}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="kicker"><span class="bar"></span>R4 — ARCHITECTURE DOCUMENTATION</div>
+    <h1>在庫管理ダッシュボード<br>アーキテクチャドキュメント</h1>
+    <p class="sub">Meridian Components, Inc. / RFP MC-2026-0417 要件 R4 に基づく現状アーキテクチャの概要。前任ベンダー納品物（2024年）に対する調査結果を含む。</p>
+    <div class="hmeta">
+      <div><div class="k">Client</div><div class="v">Meridian Components, Inc.</div></div>
+      <div><div class="k">Requirement</div><div class="v">R4 — アーキテクチャドキュメント</div></div>
+      <div><div class="k">Phase</div><div class="v">フェーズ1 / 週1–3</div></div>
+      <div><div class="k">Method</div><div class="v">ソースコード精査 + 実機検証</div></div>
+      <div><div class="k">Codebase</div><div class="v">約 8,990 行（client 8,511 / server 482）</div></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<nav class="toc">
+  <div class="t">目次</div>
+  <ol>
+    <li><a href="#s1">システム全体構成</a></li>
+    <li><a href="#s2">技術スタックと起動手順</a></li>
+    <li><a href="#s3">ディレクトリ構成</a></li>
+    <li><a href="#s4">データ層</a></li>
+    <li><a href="#s5">API エンドポイント一覧</a></li>
+    <li><a href="#s6">データフロー</a></li>
+    <li><a href="#s7">フロントエンドの実装パターン</a></li>
+    <li><a href="#s8">横断的関心事（composables）</a></li>
+    <li><a href="#s9">技術的負債の一覧</a></li>
+    <li><a href="#s10">テストの現状</a></li>
+    <li><a href="#s11">セキュリティ上の注意</a></li>
+    <li><a href="#s12">引き継ぎに向けた推奨事項</a></li>
+  </ol>
+</nav>
+
+<!-- 1 -->
+<section id="s1">
+  <h2><span class="num">01</span>システム全体構成</h2>
+  <p class="lead">4層構成のシングルページアプリケーションです。データベースは使用しておらず、JSON ファイルを起動時にメモリへ読み込む方式で動作しています。</p>
+
+  <div class="diagram">
+    <div class="tiers">
+      <div class="tier">
+        <div class="lb">TIER 1 — CLIENT</div>
+        <div class="nm">ブラウザ</div>
+        <div class="pt">Vue 3 SPA</div>
+        <ul>
+          <li>vue-router（履歴モード）</li>
+          <li>Composition API</li>
+          <li>自作 SVG チャート</li>
+          <li>CSS Grid レイアウト</li>
+        </ul>
+      </div>
+      <div class="flow"><span class="ar">→</span><span class="lbl">HTTP / axios</span></div>
+      <div class="tier t2">
+        <div class="lb">TIER 2 — DEV SERVER</div>
+        <div class="nm">Vite</div>
+        <div class="pt">:3000</div>
+        <ul>
+          <li>HMR による開発配信</li>
+          <li><code>/api</code> をプロキシ転送</li>
+          <li><code>host: true</code>（外部公開）</li>
+          <li>本番は <code>npm run build</code></li>
+        </ul>
+      </div>
+      <div class="flow"><span class="ar">→</span><span class="lbl">proxy /api</span></div>
+      <div class="tier t3">
+        <div class="lb">TIER 3 — API</div>
+        <div class="nm">FastAPI</div>
+        <div class="pt">:8001</div>
+        <ul>
+          <li>Pydantic による応答検証</li>
+          <li>インメモリでフィルタ</li>
+          <li>CORS 全許可</li>
+          <li>uvicorn で起動</li>
+        </ul>
+      </div>
+      <div class="flow"><span class="ar">→</span><span class="lbl">読み込みのみ</span></div>
+      <div class="tier t4">
+        <div class="lb">TIER 4 — DATA</div>
+        <div class="nm">JSON ファイル</div>
+        <div class="pt">server/data/</div>
+        <ul>
+          <li>7ファイル / 約 180 KB</li>
+          <li>起動時に全件ロード</li>
+          <li>DB・ORM なし</li>
+          <li>書き込みは永続化されない</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="box b">
+    <div class="h">構成上の重要な性質</div>
+    <p><strong>データは読み取り専用として扱われています。</strong> <code>mock_data.py</code> が起動時に JSON を読み込み、以降はモジュールレベルの Python リストとしてメモリに保持されます。書き込み系のエンドポイントは実装されていないため、アプリケーションから加えた変更は一切永続化されません。サーバーを再起動すると JSON ファイルの内容に戻ります。</p>
+  </div>
+
+  <div class="box a">
+    <div class="h">リモート環境での構成（2026年8月時点の変更）</div>
+    <p>参加者がリモート VM 上で稼働させ手元のブラウザから接続する構成に対応するため、<code>client/vite.config.js</code> に <code>host: true</code> と <code>/api</code> → <code>localhost:8001</code> のプロキシを設定しています。この結果、<strong>外部に公開が必要なポートは 3000 のみ</strong>です。8001 は Vite 経由となるため公開不要です。あわせて <code>api.js</code> および <code>Reports.vue</code> の絶対 URL を相対パスへ変更しました。</p>
+  </div>
+</section>
+
+<!-- 2 -->
+<section id="s2">
+  <h2><span class="num">02</span>技術スタックと起動手順</h2>
+
+  <table>
+    <thead><tr><th style="width:20%">層</th><th style="width:30%">技術</th><th>備考</th></tr></thead>
+    <tbody>
+      <tr><td>フロントエンド</td><td class="mono">Vue 3 + Composition API</td><td>ビルドツールは Vite 5.4。ルーティングは vue-router（<code>createWebHistory</code>）</td></tr>
+      <tr><td>HTTP クライアント</td><td class="mono">axios</td><td><code>client/src/api.js</code> に集約する設計（一部例外あり — §09 参照）</td></tr>
+      <tr><td>バックエンド</td><td class="mono">Python FastAPI</td><td>応答スキーマは Pydantic。ASGI サーバーは uvicorn</td></tr>
+      <tr><td>データ</td><td class="mono">JSON ファイル</td><td>DB なし。<code>server/data/</code> 配下7ファイル</td></tr>
+      <tr><td>パッケージ管理</td><td class="mono">uv / npm</td><td>Python 側は <code>uv</code>、Node 側は <code>npm</code></td></tr>
+      <tr><td>テスト</td><td class="mono">pytest</td><td>バックエンド API のみ。§10 参照</td></tr>
+    </tbody>
+  </table>
+
+  <h3>起動手順</h3>
+  <ol class="seq">
+    <li><strong>前提ツールの確認。</strong> <code>python3 -V; uv --version; node -v; npm -v</code> を実行し、Python 3.11 以降 / uv 0.4 以降 / Node 18 以降 / npm 9 以降が揃っていることを確認します。</li>
+    <li><strong>バックエンド起動。</strong> <code>cd server && uv run python main.py</code> — 初回は <code>.venv</code> を自動作成し依存を解決します。<code>http://localhost:8001/docs</code> で API ドキュメントを確認できます。</li>
+    <li><strong>フロントエンド起動。</strong> <code>cd client && npm install && npm run dev</code> — <code>http://localhost:3000</code> で起動します。</li>
+    <li><strong>まとめて起動。</strong> <code>./scripts/start.sh</code> でも両方を立ち上げられます。</li>
+  </ol>
+
+  <div class="box r">
+    <div class="h">引き継ぎ資料との相違</div>
+    <p>前任ベンダーの引き継ぎ資料（<code>docs/rfp/vendor-handoff.md</code>）は起動コマンドのみを記載しており、<strong><code>uv</code> と <code>node</code>/<code>npm</code> が事前に導入されている必要があるという前提が明記されていません。</strong> 実際の検証環境ではいずれも未インストールであり、起動に失敗しました。導入手順（いずれも <code>sudo</code> 不要）はプロジェクトルートの <code>CLAUDE.md</code> に追記済みです。</p>
+  </div>
+</section>
+
+<!-- 3 -->
+<section id="s3">
+  <h2><span class="num">03</span>ディレクトリ構成</h2>
+
+<pre class="tree">meridian-workshop-jp/
+├── client/                        <span class="c"># Vue 3 フロントエンド（8,511 行）</span>
+│   ├── src/
+│   │   ├── main.js                <span class="c"># エントリポイント / ルート定義（6件）</span>
+│   │   ├── App.vue                <span class="c"># レイアウト・ナビゲーション（486 行）</span>
+│   │   ├── api.js                 <span class="c"># API クライアント（17 関数、うち6件は未実装先）</span>
+│   │   ├── views/                 <span class="c"># ページ単位のコンポーネント</span>
+│   │   │   ├── Dashboard.vue      <span class="c"># 1,271 行 — 最大のファイル</span>
+│   │   │   ├── Spending.vue       <span class="c"># 852 行</span>
+│   │   │   ├── Reports.vue        <span class="o"># 488 行 — R1 の対象。規約から逸脱</span>
+│   │   │   ├── Demand.vue         <span class="c"># 369 行</span>
+│   │   │   ├── Inventory.vue      <span class="c"># 339 行</span>
+│   │   │   ├── Orders.vue         <span class="c"># 279 行</span>
+│   │   │   └── Backlog.vue        <span class="w"># 152 行 — ルート未定義。到達不能</span>
+│   │   ├── components/            <span class="c"># 再利用可能な UI（9ファイル）</span>
+│   │   │   ├── TasksModal.vue     <span class="w"># 621 行 — 依存 API が未実装</span>
+│   │   │   ├── FilterBar.vue      <span class="c"># 194 行 — 共通フィルター UI</span>
+│   │   │   └── ...                <span class="c"># 各種詳細モーダル</span>
+│   │   ├── composables/           <span class="c"># 横断的関心事</span>
+│   │   │   ├── useFilters.js      <span class="c"># 共有フィルター状態（56 行）</span>
+│   │   │   ├── useI18n.js         <span class="c"># 翻訳・通貨（128 行）</span>
+│   │   │   └── useAuth.js         <span class="c"># 認証（114 行、モック）</span>
+│   │   ├── locales/               <span class="c"># en.js（328 行） / ja.js（382 行）</span>
+│   │   └── utils/currency.js      <span class="o"># 為替レート直書き（28 行）</span>
+│   └── vite.config.js             <span class="c"># ポート・host・プロキシ設定</span>
+│
+├── server/                        <span class="c"># FastAPI バックエンド（482 行）</span>
+│   ├── main.py                    <span class="c"># 全エンドポイント + Pydantic モデル（309 行）</span>
+│   ├── mock_data.py               <span class="c"># JSON ローダー（39 行）</span>
+│   ├── generate_data.py           <span class="c"># サンプルデータ生成（134 行）</span>
+│   └── data/                      <span class="c"># JSON データ 7ファイル</span>
+│
+├── tests/
+│   ├── backend/                   <span class="c"># pytest — API テスト 40 件（38 パス / 2 失敗）</span>
+│   └── e2e/                       <span class="c"># Playwright — E2E テスト 40 件（R3 で追加、全件パス）</span>
+│
+└── docs/rfp/                      <span class="c"># RFP パッケージ・引き継ぎ資料</span>
+</pre>
+
+  <div class="box a">
+    <div class="h">構成上の観察</div>
+    <p><code>Dashboard.vue</code> が 1,271 行、<code>Spending.vue</code> が 852 行と大型化しています。前任ベンダー自身が <code>client/CLAUDE.md</code> に「template が 100 行、ロジックが 150 行を超えたらコンポーネントを切り出す」という基準を記載しており、<strong>自らの基準を大きく超過した状態</strong>です。動作には影響しませんが、変更時の影響範囲が読みにくくなります。</p>
+  </div>
+</section>
+
+<!-- 4 -->
+<section id="s4">
+  <h2><span class="num">04</span>データ層</h2>
+  <p class="lead">データベースは存在しません。<code>server/mock_data.py</code> が起動時に JSON ファイルを読み込み、モジュールレベルの Python オブジェクトとして保持します。</p>
+
+  <table>
+    <thead><tr><th style="width:26%">ファイル</th><th style="width:12%">サイズ</th><th style="width:28%">エクスポート名</th><th>内容</th></tr></thead>
+    <tbody>
+      <tr><td><code>orders.json</code></td><td class="num">151.4 KB</td><td><code>orders</code></td><td>受注。最大のデータセット。<code>order_date</code> による期間フィルターの対象</td></tr>
+      <tr><td><code>transactions.json</code></td><td class="num">13.7 KB</td><td><code>recent_transactions</code></td><td>取引履歴</td></tr>
+      <tr><td><code>inventory.json</code></td><td class="num">9.6 KB</td><td><code>inventory_items</code></td><td>在庫。<code>reorder_point</code>（発注点）を保持 — <strong>R2 の起点</strong></td></tr>
+      <tr><td><code>spending.json</code></td><td class="num">2.5 KB</td><td><code>spending_summary</code> 他3件</td><td>支出。1ファイルから3つの変数へ展開</td></tr>
+      <tr><td><code>demand_forecasts.json</code></td><td class="num">1.9 KB</td><td><code>demand_forecasts</code></td><td>需要予測。<code>current_demand</code> / <code>forecasted_demand</code> / <code>trend</code></td></tr>
+      <tr><td><code>backlog_items.json</code></td><td class="num">0.9 KB</td><td><code>backlog_items</code></td><td>バックログ</td></tr>
+      <tr><td><code>purchase_orders.json</code></td><td class="num">3 B</td><td><code>purchase_orders</code></td><td><span class="chip r">空配列</span> 発注データ。中身は <code>[]</code></td></tr>
+    </tbody>
+  </table>
+
+  <div class="box b">
+    <div class="h">R2（発注推奨機能）への示唆</div>
+    <p>推奨ロジックに必要な3つの入力が、いずれも既存データに存在します。<strong>在庫水準</strong>は <code>inventory.json</code> の <code>quantity_on_hand</code> と <code>reorder_point</code>、<strong>需要予測</strong>は <code>demand_forecasts.json</code> の <code>forecasted_demand</code> と <code>trend</code>。既存のバックエンドテストも「発注点以下のアイテム」の判定を検証しており、この概念はすでにシステムに定着しています。<strong>予算上限</strong>のみがオペレーター入力として新規に必要です。</p>
+  </div>
+</section>
+
+<!-- 5 -->
+<section id="s5">
+  <h2><span class="num">05</span>API エンドポイント一覧</h2>
+  <p class="lead">実装済みは 14 エンドポイント（すべて GET）。うち <code>/api/restocking</code> は R2 で追加。フロントエンドが呼び出しているが未実装のものが 6 件あります（§09 参照）。</p>
+
+  <h3>実装済み</h3>
+  <table>
+    <thead><tr><th style="width:30%">エンドポイント</th><th style="width:22%">フィルター</th><th style="width:20%">利用ビュー</th><th>備考</th></tr></thead>
+    <tbody>
+      <tr><td><code>GET /</code></td><td>—</td><td>—</td><td>疎通確認</td></tr>
+      <tr><td><code>GET /api/inventory</code></td><td>warehouse, category</td><td>Inventory, Dashboard</td><td><code>response_model</code> あり</td></tr>
+      <tr><td><code>GET /api/inventory/{id}</code></td><td>—</td><td>詳細モーダル</td><td>該当なしで 404</td></tr>
+      <tr><td><code>GET /api/orders</code></td><td>warehouse, category, status, month</td><td>Orders, Dashboard</td><td>4フィルター全対応</td></tr>
+      <tr><td><code>GET /api/orders/{id}</code></td><td>—</td><td>詳細モーダル</td><td>該当なしで 404</td></tr>
+      <tr><td><code>GET /api/demand</code></td><td><span class="chip n">なし</span></td><td>Demand</td><td>常に全件返却</td></tr>
+      <tr><td><code>GET /api/backlog</code></td><td><span class="chip n">なし</span></td><td>Dashboard</td><td><code>has_purchase_order</code> を動的付与</td></tr>
+      <tr><td><code>GET /api/dashboard/summary</code></td><td>warehouse, category, status, month</td><td>Dashboard</td><td>集計値5項目を算出</td></tr>
+      <tr><td><code>GET /api/spending/summary</code></td><td><span class="chip n">なし</span></td><td>Spending</td><td rowspan="4">支出系4本はいずれもフィルター非対応。<code>useFilters</code> の状態が反映されない</td></tr>
+      <tr><td><code>GET /api/spending/monthly</code></td><td><span class="chip n">なし</span></td><td>Spending</td></tr>
+      <tr><td><code>GET /api/spending/categories</code></td><td><span class="chip n">なし</span></td><td>Spending</td></tr>
+      <tr><td><code>GET /api/spending/transactions</code></td><td><span class="chip n">なし</span></td><td>Spending</td></tr>
+      <tr><td><code>GET /api/restocking</code></td><td>budget, warehouse, category</td><td>Restocking</td><td><span class="chip g">R2 で追加</span> 発注推奨を算出</td></tr>
+      <tr><td><code>GET /api/reports/quarterly</code></td><td><span class="chip n">なし</span></td><td>Reports</td><td><span class="chip a">api.js に未登録</span> 四半期集計を算出</td></tr>
+      <tr><td><code>GET /api/reports/monthly-trends</code></td><td><span class="chip n">なし</span></td><td>Reports</td><td><span class="chip a">api.js に未登録</span> 月次推移を算出</td></tr>
+    </tbody>
+  </table>
+
+  <h3>フィルター処理の実装</h3>
+  <p><code>main.py</code> に2つの共通関数があり、エンドポイント間で再利用されています。</p>
+  <ul class="plain">
+    <li><code>apply_filters(items, warehouse, category, status)</code> — 値が <code>'all'</code> または未指定のフィルターはスキップします。<code>category</code> と <code>status</code> は小文字化して比較するため大文字小文字を区別しません。一方 <code>warehouse</code> は<strong>完全一致</strong>で比較しており、扱いが統一されていません。</li>
+    <li><code>filter_by_month(items, month)</code> — <code>order_date</code> に対する部分一致で判定します。<code>QUARTER_MAP</code> により <code>Q1-2025</code> 形式の四半期指定にも対応しますが、<strong>2025年のみがハードコードされています。</strong> 2026年以降のデータでは四半期フィルターが機能しません。</li>
+  </ul>
+</section>
+
+<!-- 6 -->
+<section id="s6">
+  <h2><span class="num">06</span>データフロー</h2>
+  <p class="lead">オペレーターがフィルターを操作してから画面が更新されるまでの経路です。</p>
+
+  <ol class="seq">
+    <li><strong>操作。</strong> オペレーターが <code>FilterBar.vue</code> のセレクトを変更します。</li>
+    <li><strong>共有状態の更新。</strong> <code>composables/useFilters.js</code> のモジュールレベル <code>ref</code>（<code>selectedPeriod</code> / <code>selectedLocation</code> / <code>selectedCategory</code> / <code>selectedStatus</code>）が書き換わります。これはシングルトンであり、<strong>全ビューが同一のインスタンスを共有</strong>します。</li>
+    <li><strong>変更の検知。</strong> 各ビューが <code>watch</code> でフィルターを監視しており、変化を検知して再読み込み関数を呼びます。</li>
+    <li><strong>クエリの組み立て。</strong> <code>getCurrentFilters()</code> が UI の状態を API の語彙へ変換します（<code>selectedLocation</code> → <code>warehouse</code>、<code>selectedPeriod</code> → <code>month</code>）。</li>
+    <li><strong>HTTP リクエスト。</strong> <code>api.js</code> が <code>URLSearchParams</code> でクエリ文字列を構築し、<code>'all'</code> の項目は送信しません。Vite が <code>/api</code> を 8001 へ転送します。</li>
+    <li><strong>サーバー側フィルタ。</strong> FastAPI が <code>apply_filters</code> と <code>filter_by_month</code> をメモリ上のリストへ適用します。</li>
+    <li><strong>検証と応答。</strong> <code>response_model</code> が指定されたエンドポイントでは Pydantic がスキーマを検証してから JSON を返します。</li>
+    <li><strong>状態への格納。</strong> ビューは生データを <code>ref</code> に格納します。</li>
+    <li><strong>派生値の算出。</strong> 集計・整形・チャート用データは <code>computed</code> で算出されます。依存が変わるまでキャッシュされます。</li>
+    <li><strong>描画。</strong> テンプレートが更新されます。チャートは外部ライブラリを使わず、自作の SVG（<code>viewBox</code> によるスケーリング）です。</li>
+  </ol>
+
+  <div class="box g">
+    <div class="h">設計として評価できる点</div>
+    <p>「生データは <code>ref</code>、派生データは <code>computed</code>」という原則が、<code>Reports.vue</code> を除く全ビューで一貫して守られています。フィルター状態を composable のシングルトンで共有する設計も適切で、ビュー間を移動してもフィルターが保持されます。<strong>この土台は作り直す必要がありません。</strong></p>
+  </div>
+</section>
+
+<!-- 7 -->
+<section id="s7">
+  <h2><span class="num">07</span>フロントエンドの実装パターン</h2>
+
+  <h3>ルーティング</h3>
+  <p><code>main.js</code> に7件のルートが定義されています（R2 で <code>/restocking</code> を追加）。</p>
+  <table>
+    <thead><tr><th style="width:20%">パス</th><th style="width:24%">ビュー</th><th style="width:12%">行数</th><th>役割</th></tr></thead>
+    <tbody>
+      <tr><td><code>/</code></td><td><code>Dashboard.vue</code></td><td class="num">1,271</td><td>サマリー、在庫僅少、バックログ表を内包</td></tr>
+      <tr><td><code>/inventory</code></td><td><code>Inventory.vue</code></td><td class="num">339</td><td>在庫一覧</td></tr>
+      <tr><td><code>/orders</code></td><td><code>Orders.vue</code></td><td class="num">279</td><td>受注一覧</td></tr>
+      <tr><td><code>/demand</code></td><td><code>Demand.vue</code></td><td class="num">369</td><td>需要予測</td></tr>
+      <tr><td><code>/spending</code></td><td><code>Spending.vue</code></td><td class="num">852</td><td>サプライヤー支出</td></tr>
+      <tr><td><code>/reports</code></td><td><code>Reports.vue</code></td><td class="num">488</td><td>四半期・月次レポート <span class="chip a">R1 対象</span></td></tr>
+      <tr><td><code>/restocking</code></td><td><code>Restocking.vue</code></td><td class="num">555</td><td>発注推奨 <span class="chip g">R2 で追加</span></td></tr>
+      <tr class="tot"><td colspan="4">ルート未定義: <code>Backlog.vue</code>（152 行） — ナビゲーションからも到達できません</td></tr>
+    </tbody>
+  </table>
+
+  <h3>規約への準拠状況</h3>
+  <p>前任ベンダー自身が <code>client/CLAUDE.md</code> に定めた規約に対する、ビュー単位の準拠状況です。</p>
+  <table>
+    <thead><tr><th style="width:22%">ビュー</th><th><code>useFilters</code></th><th><code>useI18n</code></th><th>Composition API</th><th><code>api.js</code> 経由</th><th><code>console.log</code></th></tr></thead>
+    <tbody>
+      <tr><td><code>Dashboard.vue</code></td><td><span class="chip g">✓</span></td><td><span class="chip g">✓</span></td><td><span class="chip g">✓</span></td><td><span class="chip g">✓</span></td><td class="num">0</td></tr>
+      <tr><td><code>Inventory.vue</code></td><td><span class="chip g">✓</span></td><td><span class="chip g">✓</span></td><td><span class="chip g">✓</span></td><td><span class="chip g">✓</span></td><td class="num">0</td></tr>
+      <tr><td><code>Orders.vue</code></td><td><span class="chip g">✓</span></td><td><span class="chip g">✓</span></td><td><span class="chip g">✓</span></td><td><span class="chip g">✓</span></td><td class="num">0</td></tr>
+      <tr><td><code>Demand.vue</code></td><td><span class="chip g">✓</span></td><td><span class="chip g">✓</span></td><td><span class="chip g">✓</span></td><td><span class="chip g">✓</span></td><td class="num">0</td></tr>
+      <tr><td><code>Spending.vue</code></td><td><span class="chip g">✓</span></td><td><span class="chip g">✓</span></td><td><span class="chip g">✓</span></td><td><span class="chip g">✓</span></td><td class="num">1</td></tr>
+      <tr><td><code>Backlog.vue</code></td><td><span class="chip g">✓</span></td><td><span class="chip n">—</span></td><td><span class="chip g">✓</span></td><td><span class="chip g">✓</span></td><td class="num">0</td></tr>
+      <tr class="tot"><td><code>Reports.vue</code></td><td><span class="chip r">✗</span></td><td><span class="chip r">✗</span></td><td><span class="chip r">✗ Options API</span></td><td><span class="chip r">✗ axios 直呼び</span></td><td class="num" style="color:var(--red)">13</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box r">
+    <div class="h">R1 に関する最重要の発見</div>
+    <p><strong><code>Reports.vue</code> は、確認したすべての規約から単独で逸脱しています。</strong> コードベース全体の <code>console.log</code> 15箇所のうち 13 がこのファイルに集中しています。</p>
+    <p>RFP が挙げた症状カテゴリ（フィルターの挙動、国際化対応の不備、データパターンの不整合、コンソール出力）は、それぞれ別の不具合ではなく、<strong>「Reports.vue が既存の共通基盤に接続されていない」という単一の状態が、4つの症状として表面化したもの</strong>と考えられます。</p>
+    <p>したがって R1 の修正方針は、個別の症状に対処するのではなく、<strong>このビューを他の6ビューと同じ構造へ揃えること</strong>になります。移行先の実装はすでに存在するため、新規に設計する必要はありません。</p>
+  </div>
+</section>
+
+<!-- 8 -->
+<section id="s8">
+  <h2><span class="num">08</span>横断的関心事（composables）</h2>
+
+  <h3><code>useFilters.js</code> — 共有フィルター状態</h3>
+  <p>モジュールレベルの <code>ref</code> によるシングルトンです。4種のフィルター（期間・拠点・カテゴリー・ステータス）を保持し、<code>getCurrentFilters()</code> が UI の語彙を API の語彙へ変換します。<code>Reports.vue</code> を除く全ビューが利用しています。</p>
+
+  <h3><code>useI18n.js</code> — 翻訳と通貨</h3>
+  <p>自作の i18n 実装です。外部ライブラリ（vue-i18n 等）は使用していません。</p>
+  <ul class="plain">
+    <li><strong>ロケールは <code>localStorage</code>（キー <code>app-locale</code>）に永続化</strong>され、<strong>既定値は <code>'ja'</code></strong> です（<code>useI18n.js:11</code>）。つまりアプリは日本語で起動します。</li>
+    <li><code>t(key)</code> はドット記法でネストしたキーを解決します。見つからない場合は英語へフォールバックし、それでも無い場合は<strong>キー文字列そのものを返します</strong>。画面に <code>reports.title</code> のような文字列が表示されていれば、翻訳定義の欠落です。</li>
+    <li>固有名詞用の専用関数を持ちます（<code>translateProductName</code> / <code>translateCustomerName</code> / <code>translateWarehouse</code>）。倉庫名は都市名マッピングと <code>Warehouse X-##</code> パターンの2系統で処理されます。</li>
+    <li>翻訳定義は <code>locales/en.js</code>（328 行）と <code>locales/ja.js</code>（382 行）です。</li>
+  </ul>
+
+  <div class="box a">
+    <div class="h">通貨がロケールに連動している点について</div>
+    <p><code>useI18n.js:15-17</code> で、表示通貨がロケールから自動決定されています（<code>ja</code> → JPY、<code>en</code> → USD）。そして <code>utils/currency.js:3</code> に<strong>為替レートが定数として直書きされています</strong>。</p>
+    <p><code>const USD_TO_JPY = 150</code></p>
+    <p>結果として、<strong>言語を日本語に切り替えると全画面の金額が固定レート 150 で換算表示されます。</strong> 既定ロケールが <code>'ja'</code> であるため、東京拠点のオペレーターが通常目にする金額はすべてこの換算値です。レート更新の手段はコード変更以外にありません。業務上の影響について、Meridian のご判断を仰ぐべき事項と考えます。</p>
+  </div>
+
+  <h3><code>useAuth.js</code> — 認証（モック実装）</h3>
+  <p>認証は実装されていません。<code>isAuthenticated</code> は <code>ref(true)</code> の固定値で、<code>logout()</code> は <code>console.log</code> と <code>alert()</code> のみです。ユーザー情報はハードコードされ、ロケールに応じて日本語名（田中 太郎）と英語名（John Doe）を切り替えます。</p>
+  <div class="box r">
+    <div class="h">別案件の痕跡</div>
+    <p><code>useAuth.js:6</code> のユーザーのメールアドレスが <code>john.doe@catalystcomponents.com</code> となっています。<strong>Meridian Components ではありません。</strong> 前任ベンダーが他クライアント向けの成果物を流用した際の残存と考えられます。動作への影響はありませんが、画面上に表示される情報であり、修正すべき箇所です。</p>
+  </div>
+</section>
+
+<!-- 9 -->
+<section id="s9">
+  <h2><span class="num">09</span>技術的負債の一覧</h2>
+  <p class="lead">調査で確認した事項です。RFP の記録済み8件との対応関係は、リストのご提供後に突き合わせます。深刻度は当社の判断です。<br>
+  <strong>R1（フェーズ2）の完了により 5 件が解消済みです。</strong>各項目の状態は E2E テストスイート（<code>tests/e2e/</code>）で継続的に検証されます。</p>
+
+  <div class="stats">
+    <div class="stat g"><div class="v">5</div><div class="k">R1 で修正済み<br>D-03 / D-04 / D-07 / D-09 / D-14</div></div>
+    <div class="stat r"><div class="v">6</div><div class="k">フロントエンドが呼ぶが<br>未実装の API（範囲外・要判断）</div></div>
+    <div class="stat r"><div class="v">1</div><div class="k">参照されているが<br>存在しないコンポーネント（要判断）</div></div>
+    <div class="stat a"><div class="v">3</div><div class="k">Meridian のご判断待ち<br>D-05 / D-06 / D-08</div></div>
+  </div>
+
+  <table>
+    <thead><tr><th style="width:5%">#</th><th style="width:26%">事項</th><th style="width:10%">深刻度</th><th>内容と根拠</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="mono">D-01</td>
+        <td>未実装 API を呼び出している</td>
+        <td><span class="chip r">高</span></td>
+        <td><code>api.js</code> の 17 関数のうち 6 件が、バックエンドに存在しないエンドポイントを呼びます。実機で確認した応答は以下です。<br>
+        <code>GET /api/tasks</code> → <strong>404</strong>、<code>POST /api/purchase-orders</code> → <strong>404</strong>、<code>GET /api/purchase-orders/{id}</code> → <strong>404</strong>。<br>
+        該当関数は <code>getTasks</code> / <code>createTask</code> / <code>deleteTask</code> / <code>toggleTask</code> / <code>createPurchaseOrder</code> / <code>getPurchaseOrderByBacklogItem</code>。<br>
+        <code>TasksModal.vue</code>（621 行）は <code>/api/tasks</code> に依存しており、機能しません。</td>
+      </tr>
+      <tr>
+        <td class="mono">D-02</td>
+        <td>存在しないコンポーネントを参照している</td>
+        <td><span class="chip r">高</span><br><span class="chip n">要判断</span></td>
+        <td><code>Dashboard.vue:289</code> がテンプレート内で <code>&lt;PurchaseOrderModal&gt;</code> を使用していますが、<code>components/PurchaseOrderModal.vue</code> は存在せず、<code>import</code> 文も <code>components</code> への登録もありません。Vue のコンポーネント解決は実行時のためビルドは成功し、コンソールに解決失敗の警告が出て該当箇所には何も描画されません。</td>
+      </tr>
+      <tr>
+        <td class="mono">D-03</td>
+        <td><code>Reports.vue</code> が共通基盤から分離している</td>
+        <td><span class="chip g">修正済み</span><br><span class="chip n">R1</span></td>
+        <td>§07 の表を参照。<code>useFilters</code> 未使用、<code>useI18n</code> 未使用、Options API、<code>api.js</code> を経由しない axios 直呼び、<code>console.log</code> 13箇所。<strong>R1 の主対象。</strong></td>
+      </tr>
+      <tr>
+        <td class="mono">D-04</td>
+        <td><code>api.js</code> にレポート系の関数がない</td>
+        <td><span class="chip g">修正済み</span><br><span class="chip n">R1</span></td>
+        <td><code>/api/reports/quarterly</code> と <code>/api/reports/monthly-trends</code> はバックエンドに実装済み（実測 200）ですが、<code>api.js</code> にラッパーがありません。これが D-03 の「axios 直呼び」の直接的な原因です。<strong>API クライアント側の欠落が、ビュー側の逸脱を生んでいます。</strong></td>
+      </tr>
+      <tr>
+        <td class="mono">D-05</td>
+        <td>為替レートのハードコード</td>
+        <td><span class="chip a">中</span></td>
+        <td><code>utils/currency.js:3</code> に <code>const USD_TO_JPY = 150</code>。ロケール <code>ja</code>（既定値）ではすべての金額がこのレートで換算表示されます。§08 参照。<strong>業務判断を要する事項。</strong></td>
+      </tr>
+      <tr>
+        <td class="mono">D-06</td>
+        <td><code>Backlog.vue</code> が到達不能</td>
+        <td><span class="chip a">中</span></td>
+        <td><code>main.js</code> のルート定義に含まれず、ナビゲーションからも辿れません。バックログ表示は <code>Dashboard.vue</code> にインラインで実装されています。152 行が未使用の状態です。<strong>ルートを追加するか削除するかの判断が必要です。</strong></td>
+      </tr>
+      <tr>
+        <td class="mono">D-07</td>
+        <td>四半期マッピングが 2025 年固定</td>
+        <td><span class="chip g">修正済み</span><br><span class="chip n">R1</span></td>
+        <td><code>main.py:10-15</code> の <code>QUARTER_MAP</code> に <code>Q1-2025</code>〜<code>Q4-2025</code> のみが定義されています。<code>/api/reports/quarterly</code>（<code>main.py:239-246</code>）にも同じ年が直書きされています。<strong>2026 年のデータでは四半期集計が空になります。</strong></td>
+      </tr>
+      <tr>
+        <td class="mono">D-08</td>
+        <td>支出系 API がフィルター非対応</td>
+        <td><span class="chip a">中</span></td>
+        <td><code>/api/spending/*</code> の4本はクエリパラメータを受け取りません。一方 <code>Spending.vue</code> は <code>useFilters</code> を使用しているため、<strong>UI 上でフィルターを操作しても支出データに反映されません。</strong></td>
+      </tr>
+      <tr>
+        <td class="mono">D-09</td>
+        <td>別案件の情報が残存</td>
+        <td><span class="chip g">修正済み</span><br><span class="chip n">R1</span></td>
+        <td><code>useAuth.js:6</code> のメールアドレスが <code>john.doe@catalystcomponents.com</code>。Meridian のドメインではありません。画面に表示されます。</td>
+      </tr>
+      <tr>
+        <td class="mono">D-10</td>
+        <td>認証が未実装</td>
+        <td><span class="chip a">中</span></td>
+        <td><code>isAuthenticated</code> は固定で <code>true</code>、<code>logout()</code> は <code>alert()</code> のみ。社内ホスティング前提の設計と理解していますが、現状を明記します。</td>
+      </tr>
+      <tr>
+        <td class="mono">D-11</td>
+        <td>大型コンポーネント</td>
+        <td><span class="chip n">低</span></td>
+        <td><code>Dashboard.vue</code> 1,271 行、<code>Spending.vue</code> 852 行。前任ベンダー自身が <code>client/CLAUDE.md</code> に記した分割基準（template 100 行 / ロジック 150 行）を超過しています。動作への影響はありません。</td>
+      </tr>
+      <tr>
+        <td class="mono">D-12</td>
+        <td>フィルター比較の不統一</td>
+        <td><span class="chip n">低</span></td>
+        <td><code>main.py:38-45</code> で <code>category</code> と <code>status</code> は小文字化して比較する一方、<code>warehouse</code> は完全一致です。大文字小文字が異なる入力で挙動が変わります。</td>
+      </tr>
+      <tr>
+        <td class="mono">D-14</td>
+        <td>金額表示が切り捨てられていた</td>
+        <td><span class="chip g">修正済み</span><br><span class="chip n">R1</span></td>
+        <td><strong>R1 の調査中に判明。RFP の記録には含まれていない可能性が高い事項です。</strong><br>
+        <code>Reports.vue</code> の <code>formatNumber</code> が手書きのカンマ区切り実装で、小数部を <code>substring(0, 2)</code> により<strong>切り捨て</strong>ていました（四捨五入ではない）。<br>
+        実測例: <code>30082.22999999975</code> → <code>$30,082.22</code>（正しくは <code>.23</code>）、<code>47473.389999999665</code> → <code>$47,473.38</code>（正しくは <code>.39</code>）。<br>
+        Reports 上の全金額が最大 1 銭低く表示されていました。共通実装 <code>utils/currency.js</code> の <code>formatCurrencyWithDecimals</code>（<code>toLocaleString</code> ベース）へ置き換えて解消しています。</td>
+      </tr>
+      <tr>
+        <td class="mono">D-13</td>
+        <td><code>purchase_orders.json</code> が空</td>
+        <td><span class="chip n">低</span></td>
+        <td>内容は <code>[]</code>。<code>/api/backlog</code> の <code>has_purchase_order</code> は常に <code>false</code> を返します。D-01・D-02 と同根の未完成状態です。</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="box b">
+    <div class="h">発注機能は3層すべてで未完成です</div>
+    <p>D-01・D-02・D-13 は個別の不具合ではなく、ひとつの未完成機能の断片です。前任ベンダーは発注機能に着手し、各層に足場を残したまま離脱しています。</p>
+    <ul class="plain" style="margin-top:12px">
+      <li><strong>データ層</strong> — <code>purchase_orders.json</code> は作成済み、ただし空</li>
+      <li><strong>API 層</strong> — Pydantic モデル <code>PurchaseOrder</code> と <code>CreatePurchaseOrderRequest</code> は定義済み（<code>main.py:104-121</code>）、ただし<strong>使用するエンドポイントが存在しない</strong></li>
+      <li><strong>API クライアント</strong> — <code>createPurchaseOrder</code> と <code>getPurchaseOrderByBacklogItem</code> は実装済み、ただし呼び先が 404</li>
+      <li><strong>UI 層</strong> — <code>Dashboard.vue</code> に配置済み、ただし<strong>コンポーネント本体が存在しない</strong></li>
+    </ul>
+    <p style="margin-top:12px">R2（発注推奨機能）は、この既存の足場を活用して構築できます。データ構造とインターフェースの意図はコードから読み取れるため、設計を白紙から起こす必要はありません。</p>
+  </div>
+</section>
+
+<!-- 10 -->
+<section id="s10">
+  <h2><span class="num">10</span>テストの現状</h2>
+
+  <div class="box g">
+    <div class="h">RFP の記述との相違</div>
+    <p>RFP §2 は「自動テストが一切整備されておらず」と記載していますが、<strong><code>tests/backend/</code> に API テストが存在します。</strong> 引き継ぎ資料の「自動テストは未納品」という記述も、実態と異なります。</p>
+  </div>
+
+  <div class="box r">
+    <div class="h">訂正 — テスト件数と成否について</div>
+    <p>当初、同梱の <code>tests/TEST_SUMMARY.md</code> の記述にもとづき「API テスト 55 件が全件パス」とご報告しました。<strong>実測値は以下のとおりで、この記述は事実と異なります。</strong></p>
+    <p style="font-family:var(--mono);font-size:13.5px;margin:12px 0"># cd tests &amp;&amp; pytest -q<br>40 tests collected<br><strong>2 failed, 38 passed</strong></p>
+    <p>失敗している 2 件はいずれも <code>test_misc_endpoints.py::TestDemandEndpoints</code> で、需要予測データに期待される SKU（<code>SNR-420</code>）が存在しないことによるものです。<strong>本案件の変更前から失敗していた既存の不整合</strong>であり、変更前のコードで再現確認済みです。</p>
+    <p><code>TEST_SUMMARY.md</code> も、引き継ぎ資料と同様に実物と乖離していました。ドキュメントの記述は必ず実行して確認する必要があります。</p>
+  </div>
+
+  <table>
+    <thead><tr><th style="width:34%">対象</th><th style="width:14%">件数</th><th>内容</th></tr></thead>
+    <tbody>
+      <tr><td>ダッシュボード endpoint</td><td class="num">13</td><td>サマリー取得、型検証、非負値検証、4フィルターの単独・組み合わせ、<strong>実際の計算値の検証</strong>（保留中注文数、在庫僅少判定、在庫総額）</td></tr>
+      <tr><td>在庫 endpoint</td><td class="num">10</td><td>全件取得、倉庫別・カテゴリー別・組み合わせフィルター</td></tr>
+      <tr><td>その他 endpoint</td><td class="num">17</td><td><code>test_misc_endpoints.py</code>。うち <span class="chip r">2 件が失敗</span>（需要予測データの不整合、既存）</td></tr>
+      <tr><td>発注推奨 endpoint</td><td class="num">35</td><td><code>test_restocking.py</code>（R2 で追加）。構造・算出・優先順位・予算配分・フィルター・endpoint 間整合</td></tr>
+      <tr class="tot"><td>合計</td><td class="num">75</td><td>73 パス / 2 失敗（既存）</td></tr>
+    </tbody>
+  </table>
+
+  <p><strong>実行方法:</strong> <code>cd tests && ../server/.venv/bin/python -m pytest -q</code>（<code>pytest.ini</code> と <code>conftest.py</code> を同梱）</p>
+  <p>引き継ぎ資料が案内する <code>uv run pytest</code> は、<code>tests/</code> に <code>pyproject.toml</code> が無いため解決に失敗します。<code>server/</code> の仮想環境を指定して実行してください。</p>
+
+  <h3>R3 で追加したブラウザ層（納品済み）</h3>
+  <p>ブラウザ層の E2E テストは存在しませんでした。バックエンドが守られている一方で UI の挙動を検証する手段がなかったため、D-02（存在しないコンポーネント）のような不具合が検知されないまま残っていました。<code>tests/e2e/</code> に Playwright ベースのスイートを構築しました。</p>
+
+  <table>
+    <thead><tr><th style="width:34%">ファイル</th><th style="width:12%">件数</th><th>対象</th></tr></thead>
+    <tbody>
+      <tr><td><code>specs/01-smoke.spec.js</code></td><td class="num">10</td><td>全 7 ルートの描画、ナビゲーション遷移</td></tr>
+      <tr><td><code>specs/02-inventory.spec.js</code></td><td class="num">6</td><td>在庫の表示、倉庫・カテゴリーの絞り込み、フィルター保持</td></tr>
+      <tr><td><code>specs/03-orders.spec.js</code></td><td class="num">6</td><td>受注の表示、ステータス・期間の絞り込み、リセット</td></tr>
+      <tr><td><code>specs/04-spending.spec.js</code></td><td class="num">3</td><td>支出の表示、4 エンドポイントの取得</td></tr>
+      <tr><td><code>specs/05-reports.spec.js</code></td><td class="num">10</td><td>Reports の回帰テスト（R1 の安全網）</td></tr>
+      <tr><td><code>specs/06-console-health.spec.js</code></td><td class="num">6</td><td>コンソールの健全性、ブランディング整合性</td></tr>
+      <tr><td><code>specs/07-restocking.spec.js</code></td><td class="num">26</td><td>発注推奨（R2）。根拠表示・優先順位・予算配分・フィルター連動</td></tr>
+      <tr class="tot"><td>合計</td><td class="num">67</td><td>全件パス / 実行約 13 秒 / 終了コード 0</td></tr>
+    </tbody>
+  </table>
+
+  <p><strong>実行方法:</strong> <code>cd tests/e2e && npm install && npm run install:browser && npm test</code></p>
+
+  <div class="box b">
+    <div class="h">既知の欠陥を「失敗するのが正しい」として記録しています</div>
+    <p>未修正の欠陥は <code>test.fail()</code> で宣言しています。<strong>現状は失敗するのが正しい状態</strong>であり、Playwright はこれを「想定どおり失敗した」として合格に数えるため、スイート全体は緑（終了コード 0）を保ちます。</p>
+    <p><strong>欠陥を修正すると、そのテストは成功に転じてスイートが赤になります。</strong>これは異常ではなく修正完了の合図です。該当テストから <code>test.fail()</code> を外すと、以降は通常の回帰テストとして機能します。</p>
+    <p>現在 <code>test.fail()</code> で記録されているのは 4 件です。D-01・D-02（R2 で対応）、D-06・D-08（Meridian のご判断待ち）。</p>
+  </div>
+
+  <ul class="plain">
+    <li><strong>コンポーネント単体テストは作成していません。</strong> RFP の要求は E2E であるため、本提案では E2E を優先しています。</li>
+  </ul>
+
+  <div class="box a">
+    <div class="h">既存テストの限界</div>
+    <p>既存のバックエンドテストは<strong>実装済みエンドポイントのみ</strong>を対象としています。D-01 で示した未実装エンドポイント（<code>/api/tasks</code>、<code>/api/purchase-orders</code>）は、テストが存在しないため 404 が検知されませんでした。テストの網羅性は、テスト対象の網羅性に依存します。</p>
+  </div>
+</section>
+
+<!-- 11 -->
+<section id="s11">
+  <h2><span class="num">11</span>セキュリティ上の注意</h2>
+  <p class="lead">現状は社内ホスティングの開発構成です。外部公開を検討される場合は、以下がすべて未対応であることをご認識ください。</p>
+
+  <table>
+    <thead><tr><th style="width:26%">項目</th><th style="width:14%">現状</th><th>内容</th></tr></thead>
+    <tbody>
+      <tr><td>認証・認可</td><td><span class="chip r">なし</span></td><td><code>isAuthenticated</code> は固定 <code>true</code>。全画面が無条件に閲覧可能です</td></tr>
+      <tr><td>CORS</td><td><span class="chip r">全許可</span></td><td><code>main.py:52</code> で <code>allow_origins=["*"]</code> かつ <code>allow_credentials=True</code></td></tr>
+      <tr><td>レート制限</td><td><span class="chip r">なし</span></td><td>—</td></tr>
+      <tr><td>入力検証</td><td><span class="chip a">型のみ</span></td><td>Pydantic による型検証のみ。値域・長さの検証はありません</td></tr>
+      <tr><td>HTTPS</td><td><span class="chip r">なし</span></td><td>開発サーバーは HTTP です</td></tr>
+      <tr><td>開発サーバーの公開範囲</td><td><span class="chip a">要注意</span></td><td>リモート対応で <code>host: true</code> を設定したため、Vite が全インターフェースで待ち受けます。<strong>ファイアウォールで接続元 IP を限定してください。</strong></td></tr>
+    </tbody>
+  </table>
+  <p>前任ベンダーも <code>server/CLAUDE.md</code> に同様の注意を残しています。本ドキュメントでは実測にもとづき現状を再確認しました。</p>
+</section>
+
+<!-- 12 -->
+<section id="s12">
+  <h2><span class="num">12</span>引き継ぎに向けた推奨事項</h2>
+
+  <h3>本案件（R1〜R4、D1〜D3）で対応する事項</h3>
+  <table>
+    <thead><tr><th style="width:14%">要件</th><th style="width:30%">対応する負債</th><th>方針</th></tr></thead>
+    <tbody>
+      <tr><td><span class="chip g">R1 完了</span></td><td>D-03、D-04、D-07、D-09、D-14</td><td><strong>対応済み。</strong><code>api.js</code> にレポート系関数を追加（D-04）したうえで、<code>Reports.vue</code> を Composition API へ移行し <code>useFilters</code>・<code>useI18n</code> へ接続しました。<code>console.log</code> を全廃し、金額整形を共通実装へ統一（D-14）。バックエンドのレポート系 2 エンドポイントにフィルターを追加し、四半期判定を年非依存にしました（D-07）。ブランド情報も是正（D-09）。</td></tr>
+      <tr><td><span class="chip g">R2 完了</span></td><td>—</td><td><strong>納品済み。</strong><code>GET /api/restocking</code> と <code>Restocking.vue</code> を新設しました。算出方法は <code>proposal/restocking-logic.md</code> に定義し、実装前に Meridian と合意済みです。バックエンドテスト 35 件、E2E テスト 26 件を追加。<br><strong>D-01・D-02 は本要件の範囲外です</strong>（下記参照）。</td></tr>
+      <tr><td><span class="chip g">R3 完了</span></td><td>—</td><td><strong>納品済み。</strong><code>tests/e2e/</code> に 40 件のスイートを構築。主要 4 フローと、コンソール健全性（D-02 の類を検知）を含みます。IT チーム向けの実行手順は <code>tests/e2e/README.md</code>。R2 完了後に発注推奨フローを追加します。</td></tr>
+      <tr><td><span class="chip n">R4</span></td><td>—</td><td>本ドキュメント。フェーズ2〜4の変更を反映して最終更新します。</td></tr>
+      <tr><td><span class="chip a">D2 一部完了</span></td><td>—</td><td>R1 の一環として Reports の翻訳定義（<code>reports.*</code>、<code>nav.reports</code>）を <code>en.js</code>・<code>ja.js</code> に追加しました。残りの未対応箇所はフェーズ4で対応します。</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Meridian のご判断を仰ぐ事項</h3>
+  <ol class="seq">
+    <li><strong>D-05 — 為替レートの扱い。</strong> 固定レート 150 での換算表示を継続するか、レートを設定可能にするか、あるいは日本語表示でも USD を維持するか。会計上の扱いに関わるため、当社では判断できません。</li>
+    <li><strong>D-06 — <code>Backlog.vue</code> の去就。</strong> ルートを追加して画面として復活させるか、削除するか。<code>Dashboard.vue</code> にインライン実装があるため、機能面での欠落は現在生じていません。</li>
+    <li><strong>D-01 — タスク機能の去就。</strong> <code>TasksModal.vue</code>（621 行）は未実装 API に依存しています。バックエンドを実装して機能を完成させるか、UI ごと撤去するか。<strong>本提案の範囲外</strong>であり、ご希望に応じて別途お見積もりします。</li>
+    <li><strong>D-02 — 発注実行機能の去就。</strong> R2 の完了後も本項目は残っています。<code>&lt;PurchaseOrderModal&gt;</code> と「Create PO」ボタンは<strong>発注の実行</strong>を担う UI であり、前提条件 A5（発注実行の連携は範囲外）により R2 の納品範囲に含まれません。当社の判断で UI を削除することは避け、現状のまま残しています。<br><strong>選択肢は3つです。</strong>(1) 発注実行機能として完成させる（別途お見積もり）、(2) 動作しない UI を撤去する、(3) 現状のまま残す。オペレーターが押しても何も起きないボタンが表示されている状態のため、(1) または (2) を推奨します。</li>
+    <li><strong>D-07 — 四半期マッピングの年次対応。</strong> 2026 年以降のデータを扱う予定があるかどうかで対応の緊急度が変わります。</li>
+    <li><strong>D-08 — 支出画面のフィルター。</strong> 支出データにフィルターを効かせる想定があるか。UI 側にフィルターが表示されているため、オペレーターは効くと考えている可能性があります。</li>
+  </ol>
+
+  <h3>本提案の範囲外とする事項</h3>
+  <ul class="plain">
+    <li><strong>D-10 — 認証の実装。</strong> 社内ホスティング前提の設計と理解しています。外部公開のご予定がある場合はご相談ください。</li>
+    <li><strong>D-11 — 大型コンポーネントの分割。</strong> 動作に影響しないため、R1・R2 の作業で触れる範囲にとどめます。全面的なリファクタリングはご予算を消費するのみで、新たな価値を生みません。</li>
+    <li><strong>D-12 — フィルター比較の不統一。</strong> <code>warehouse</code> のみ完全一致で比較されています。現状のデータでは実害が生じないため、修正は見送ります。データ入力元が増える場合はご相談ください。</li>
+    <li><strong>需要予測テストの失敗 2 件。</strong> §10 の訂正欄に記載のとおり、データ側の不整合です。<code>demand_forecasts.json</code> に <code>SNR-420</code> を追加するか、テストを現行データに合わせるかの判断が必要です。<strong>本提案の範囲外</strong>ですが、テストが常時赤である状態は IT チームの承認判断を妨げるため、早期の解消をお勧めします。</li>
+    <li><strong>データベースの導入。</strong> 現行の JSON ファイル方式を踏襲します（技術アプローチ 前提条件 A6）。</li>
+  </ul>
+
+  <div class="box g">
+    <div class="h">総括</div>
+    <p>前任ベンダーの納品物は、ドキュメントから受ける印象より<strong>良好な状態</strong>です。バックエンドには API テストが整備され、i18n 基盤は稼働し、フィルター状態の共有設計も適切です。「生データは <code>ref</code>、派生データは <code>computed</code>」という原則も 6 ビューで一貫しています。</p>
+    <p>問題は品質のばらつきではなく、<strong>作業が途中で止まっている点</strong>に集約されます。<code>Reports.vue</code> は共通基盤への接続前に、発注機能は各層に足場を置いた段階で、それぞれ手が止まりました。</p>
+    <p>したがって本案件の性格は「作り直し」ではなく<strong>「接続と完成」</strong>です。既存資産を作り直す判断は、Meridian のご予算を消費するだけで新たな価値を生みません。当社は既にあるものを活用します。</p>
+  </div>
+</section>
+
+<footer>
+  R4 — アーキテクチャドキュメント / Meridian Components, Inc. / RFP MC-2026-0417<br>
+  調査方法: <code>client/</code> および <code>server/</code> のソースコード精査、稼働中サーバーに対するエンドポイント実測、既存テストスイートの確認<br>
+  本ドキュメントはフェーズ2〜4 の変更を反映し、フェーズ5（引き継ぎ）で最終版を納品します
+</footer>
+
+</div>
+</body>
+</html>
