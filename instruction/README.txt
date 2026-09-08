@@ -31,6 +31,10 @@ Meridian Components ワークショップ — 生成レポート一式
     講師用ガイドブック
     → ★参加者には配布しないでください。課題の答えを含みます
 
+07-R1-defect-matrix.md
+    講師用参考情報
+　　 案件: Meridian Components 在庫ダッシュボード の既存Bug例
+
 assets/
     04 の報告書が参照するスクリーンショット 12 点
 
